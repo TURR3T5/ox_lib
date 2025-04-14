@@ -1,4 +1,5 @@
-import { Box, createStyles } from '@mantine/core';
+import { Box } from '@mantine/core';
+import { createStyles } from '@mantine/emotion';
 import { useEffect, useState } from 'react';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
@@ -21,7 +22,7 @@ const useStyles = createStyles((theme) => ({
     color: theme.colors.dark[0],
 
     '&:hover': {
-      fill: theme.fn.primaryColor(),
+      fill: theme.primaryColor,
       cursor: 'pointer',
       '> g > text, > g > svg > path': {
         fill: '#fff',
@@ -36,13 +37,13 @@ const useStyles = createStyles((theme) => ({
     fill: theme.colors.dark[6],
   },
   centerCircle: {
-    fill: theme.fn.primaryColor(),
+    fill: theme.primaryColor,
     color: '#fff',
     stroke: theme.colors.dark[6],
     strokeWidth: 4,
     '&:hover': {
       cursor: 'pointer',
-      fill: theme.colors[theme.primaryColor][theme.fn.primaryShade() - 1],
+      fill: theme.colors[theme.primaryColor][Number(theme.primaryShade) - 1],
     },
   },
   centerIconContainer: {

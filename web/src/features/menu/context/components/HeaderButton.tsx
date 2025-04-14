@@ -1,4 +1,5 @@
-import { Button, createStyles } from '@mantine/core';
+import { Button } from '@mantine/core';
+import { createStyles } from '@mantine/emotion';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import LibIcon from '../../../../components/LibIcon';
 

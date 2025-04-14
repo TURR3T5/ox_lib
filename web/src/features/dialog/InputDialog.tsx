@@ -41,22 +41,19 @@ const InputDialog: React.FC = () => {
     setFields(data);
     setVisible(true);
     data.rows.forEach((row, index) => {
-      fieldForm.insert(
-        index,
-        {
-          value:
-            row.type !== 'checkbox'
-              ? row.type === 'date' || row.type === 'date-range' || row.type === 'time'
-                ? // Set date to current one if default is set to true
-                  row.default === true
-                  ? new Date().getTime()
-                  : Array.isArray(row.default)
+      fieldForm.insert(index, {
+        value:
+          row.type !== 'checkbox'
+            ? row.type === 'date' || row.type === 'date-range' || row.type === 'time'
+              ? // Set date to current one if default is set to true
+                row.default === true
+                ? new Date().getTime()
+                : Array.isArray(row.default)
                   ? row.default.map((date) => new Date(date).getTime())
                   : row.default && new Date(row.default).getTime()
-                : row.default
-              : row.checked,
-        } || { value: null }
-      );
+              : row.default
+            : row.checked,
+      });
       // Backwards compat with new Select data type
       if (row.type === 'select' || row.type === 'multi-select') {
         row.options = row.options.map((option) =>
@@ -107,9 +104,8 @@ const InputDialog: React.FC = () => {
         styles={{ title: { textAlign: 'center', width: '100%', fontSize: 18 } }}
         title={fields.heading}
         withCloseButton={false}
-        overlayOpacity={0.5}
-        transition="fade"
-        exitTransitionDuration={150}
+        overlayProps={{ backgroundOpacity: 0.5 }}
+        transitionProps={{ duration: 150, transition: 'fade' }}
       >
         <form onSubmit={onSubmit}>
           <Stack>
@@ -151,9 +147,9 @@ const InputDialog: React.FC = () => {
                 </React.Fragment>
               );
             })}
-            <Group position="right" spacing={10}>
+            <Group justify="flex-end" gap={10}>
               <Button
-                uppercase
+                tt="uppercase"
                 variant="default"
                 onClick={() => handleClose()}
                 mr={3}
@@ -161,7 +157,7 @@ const InputDialog: React.FC = () => {
               >
                 {locale.ui.cancel}
               </Button>
-              <Button uppercase variant="light" type="submit">
+              <Button tt="uppercase" variant="light" type="submit">
                 {locale.ui.confirm}
               </Button>
             </Group>

@@ -1,4 +1,5 @@
-import { Button, createStyles, Group, HoverCard, Image, Progress, Stack, Text } from '@mantine/core';
+import { Button, Group, HoverCard, Image, Progress, Stack, Text } from '@mantine/core';
+import { createStyles } from '@mantine/emotion';
 import ReactMarkdown from 'react-markdown';
 import { ContextMenuProps, Option } from '../../../../typings';
 import { fetchNui } from '../../../../utils/fetchNui';
@@ -103,7 +104,7 @@ const ContextButton: React.FC<{
             variant="default"
             disabled={button.disabled}
           >
-            <Group position="apart" w="100%" noWrap>
+            <Group justify="space-between" w="100%" wrap="nowrap">
               <Stack className={classes.buttonStack}>
                 {(button.title || Number.isNaN(+buttonKey)) && (
                   <Group className={classes.buttonGroup}>

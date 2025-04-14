@@ -17,20 +17,49 @@ const TimeField: React.FC<Props> = (props) => {
     rules: { required: props.row.required },
   });
 
+  const getTimeString = (): string => {
+    if (!controller.field.value) return '';
+
+    const date = new Date(controller.field.value);
+    if (isNaN(date.getTime())) return '';
+
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${hours}:${minutes}`;
+  };
+
   return (
     <TimeInput
-      value={controller.field.value ? new Date(controller.field.value) : controller.field.value}
+      value={getTimeString()}
       name={controller.field.name}
       ref={controller.field.ref}
       onBlur={controller.field.onBlur}
-      onChange={(date) => controller.field.onChange(date ? date.getTime() : null)}
+      onChange={(event) => {
+        const timeString = event.currentTarget.value;
+        if (!timeString) {
+          controller.field.onChange(null);
+          return;
+        }
+
+        try {
+          const today = new Date();
+          const [hours, minutes] = timeString.split(':').map(Number);
+
+          if (!isNaN(hours) && !isNaN(minutes)) {
+            today.setHours(hours, minutes, 0, 0);
+            controller.field.onChange(today.getTime());
+          } else {
+            controller.field.onChange(null);
+          }
+        } catch (err) {
+          controller.field.onChange(null);
+        }
+      }}
       label={props.row.label}
       description={props.row.description}
       disabled={props.row.disabled}
-      format={props.row.format || '12'}
       withAsterisk={props.row.required}
-      clearable={props.row.clearable}
-      icon={props.row.icon && <LibIcon fixedWidth icon={props.row.icon} />}
+      leftSection={props.row.icon && <LibIcon fixedWidth icon={props.row.icon} />}
     />
   );
 };

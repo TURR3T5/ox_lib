@@ -1,4 +1,5 @@
-import { Box, createStyles, Text } from '@mantine/core';
+import { Box, Text } from '@mantine/core';
+import { createStyles } from '@mantine/emotion';
 import React from 'react';
 
 const useStyles = createStyles((theme) => ({

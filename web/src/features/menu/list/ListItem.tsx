@@ -1,4 +1,5 @@
-import { Box, createStyles, Group, Progress, Stack, Text } from '@mantine/core';
+import { Box, Group, Progress, Stack, Text } from '@mantine/core';
+import { createStyles } from '@mantine/emotion';
 import React, { forwardRef } from 'react';
 import CustomCheckbox from './CustomCheckbox';
 import type { MenuItem } from '../../../typings';
@@ -77,12 +78,13 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
       className={classes.buttonContainer}
       key={`item-${index}`}
       ref={(element: HTMLDivElement) => {
-        if (ref)
+        if (ref && element) {
           // @ts-ignore i cba
-          return (ref.current = [...ref.current, element]);
+          ref.current = [...(ref.current || []), element];
+        }
       }}
     >
-      <Group spacing={15} noWrap className={classes.buttonWrapper}>
+      <Group gap={15} wrap="nowrap" className={classes.buttonWrapper}>
         {item.icon && (
           <Box className={classes.iconContainer}>
             {typeof item.icon === 'string' && isIconUrl(item.icon) ? (
@@ -98,8 +100,8 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
           </Box>
         )}
         {Array.isArray(item.values) ? (
-          <Group position="apart" w="100%">
-            <Stack spacing={0} justify="space-between">
+          <Group justify="space-between" w="100%">
+            <Stack gap={0} justify="space-between">
               <Text className={classes.label}>{item.label}</Text>
               <Text>
                 {typeof item.values[scrollIndex] === 'object'
@@ -108,7 +110,7 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
                   : item.values[scrollIndex]}
               </Text>
             </Stack>
-            <Group spacing={1} position="center">
+            <Group gap={1} justify="center">
               <LibIcon icon="chevron-left" className={classes.chevronIcon} />
               <Text className={classes.scrollIndexValue}>
                 {scrollIndex + 1}/{item.values.length}
@@ -117,12 +119,12 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
             </Group>
           </Group>
         ) : item.checked !== undefined ? (
-          <Group position="apart" w="100%">
+          <Group justify="space-between" w="100%">
             <Text>{item.label}</Text>
             <CustomCheckbox checked={checked}></CustomCheckbox>
           </Group>
         ) : item.progress !== undefined ? (
-          <Stack className={classes.progressStack} spacing={0}>
+          <Stack className={classes.progressStack} gap={0}>
             <Text className={classes.progressLabel}>{item.label}</Text>
             <Progress
               value={item.progress}

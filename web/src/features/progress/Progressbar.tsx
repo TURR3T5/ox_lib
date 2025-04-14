@@ -1,48 +1,97 @@
 import React from 'react';
-import { Box, createStyles, Text } from '@mantine/core';
+import { ActionIcon, Box, Text } from '@mantine/core';
+import { createStyles } from '@mantine/emotion';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { fetchNui } from '../../utils/fetchNui';
 import ScaleFade from '../../transitions/ScaleFade';
 import type { ProgressbarProps } from '../../typings';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const useStyles = createStyles((theme) => ({
-  container: {
-    width: 350,
-    height: 45,
-    borderRadius: theme.radius.sm,
-    backgroundColor: theme.colors.dark[5],
-    overflow: 'hidden',
-  },
   wrapper: {
     width: '100%',
-    height: '20%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    bottom: 0,
+    bottom: 60,
     position: 'absolute',
   },
-  bar: {
-    height: '100%',
-    backgroundColor: theme.colors[theme.primaryColor][theme.fn.primaryShade()],
-  },
-  labelWrapper: {
-    position: 'absolute',
-    display: 'flex',
+  container: {
     width: 350,
-    height: 45,
+    display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'relative',
+  },
+  header: {
+    width: '100%',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.3)',
+    paddingBottom: 0,
+    position: 'relative',
+  },
+  labelRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+    alignItems: 'center',
   },
   label: {
-    maxWidth: 350,
-    padding: 8,
-    textOverflow: 'ellipsis',
+    fontSize: 16,
+    color: 'white',
+    fontWeight: 700,
+  },
+  percentage: {
+    fontSize: 16,
+    fontWeight: 700,
+    color: 'white',
+  },
+  iconWrapper: {
+    position: 'absolute',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    top: -17.5,
+    zIndex: 10,
+  },
+  iconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 4,
+    border: '1px solid #FF7A00',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  progressContainer: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginTop: 8,
+  },
+  segmentContainer: {
+    flex: 1,
+    display: 'flex',
     overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    fontSize: 20,
-    color: theme.colors.gray[3],
-    textShadow: theme.shadows.sm,
+  },
+  segment: {
+    height: 12,
+    flex: 1,
+    borderRadius: 4,
+    marginRight: 5,
+    transform: 'skew(-15deg)',
+  },
+  activeSegment: {
+    backgroundColor: '#FF7A00',
+  },
+  inactiveSegment: {
+    backgroundColor: '#555',
+  },
+  hiddenProgressBar: {
+    display: 'none',
+    height: '100%',
+    width: '100%',
+    animation: 'progress-bar linear',
   },
 }));
 
@@ -51,6 +100,31 @@ const Progressbar: React.FC = () => {
   const [visible, setVisible] = React.useState(false);
   const [label, setLabel] = React.useState('');
   const [duration, setDuration] = React.useState(0);
+  const [progress, setProgress] = React.useState(0);
+
+  const totalSegments = 30;
+
+  React.useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    if (visible) {
+      const startTime = Date.now();
+      interval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const newProgress = Math.min(100, (elapsed / duration) * 100);
+        setProgress(newProgress);
+
+        if (newProgress >= 100) {
+          clearInterval(interval);
+          setTimeout(() => setVisible(false), 200);
+        }
+      }, 16);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [visible, duration]);
 
   useNuiEvent('progressCancel', () => setVisible(false));
 
@@ -58,29 +132,55 @@ const Progressbar: React.FC = () => {
     setVisible(true);
     setLabel(data.label);
     setDuration(data.duration);
+    setProgress(0);
   });
 
+  const renderSegments = () => {
+    const activeSegments = Math.floor((progress / 100) * totalSegments);
+
+    return Array(totalSegments)
+      .fill(0)
+      .map((_, index) => (
+        <Box
+          key={index}
+          className={`${classes.segment} ${index < activeSegments ? classes.activeSegment : classes.inactiveSegment}`}
+        />
+      ));
+  };
+
   return (
-    <>
-      <Box className={classes.wrapper}>
-        <ScaleFade visible={visible} onExitComplete={() => fetchNui('progressComplete')}>
-          <Box className={classes.container}>
-            <Box
-              className={classes.bar}
-              onAnimationEnd={() => setVisible(false)}
-              sx={{
-                animation: 'progress-bar linear',
-                animationDuration: `${duration}ms`,
-              }}
-            >
-              <Box className={classes.labelWrapper}>
-                <Text className={classes.label}>{label}</Text>
-              </Box>
+    <Box className={classes.wrapper}>
+      <ScaleFade visible={visible} onExitComplete={() => fetchNui('progressComplete')}>
+        <Box className={classes.container}>
+          <Box className={classes.iconWrapper}>
+            <Box className={classes.iconContainer}>
+              <ActionIcon variant="light" size={40} color="#FF7A00" radius="md">
+                <FontAwesomeIcon icon={['fas', 'circle-notch']} spin size="lg" color="FF7A00" />
+              </ActionIcon>
             </Box>
           </Box>
-        </ScaleFade>
-      </Box>
-    </>
+
+          <Box className={classes.header}>
+            <Box className={classes.labelRow}>
+              <Text className={classes.label}>{label}</Text>
+              <Text className={classes.percentage}>{Math.floor(progress)}%</Text>
+            </Box>
+          </Box>
+
+          <Box className={classes.progressContainer}>
+            <Box className={classes.segmentContainer}>{renderSegments()}</Box>
+          </Box>
+
+          <Box
+            className={classes.hiddenProgressBar}
+            style={{
+              animationDuration: `${duration}ms`,
+            }}
+            onAnimationEnd={() => setVisible(false)}
+          />
+        </Box>
+      </ScaleFade>
+    </Box>
   );
 };
 

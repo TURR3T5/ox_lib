@@ -1,15 +1,16 @@
-import React from 'react';
-import {createStyles, keyframes, RingProgress, Stack, Text, useMantineTheme} from '@mantine/core';
-import {useNuiEvent} from '../../hooks/useNuiEvent';
-import {fetchNui} from '../../utils/fetchNui';
+import React, { useEffect } from 'react';
+import { RingProgress, Stack, Text, useMantineTheme } from '@mantine/core';
+import { createStyles } from '@mantine/emotion';
+import { keyframes } from '@emotion/react';
+import { useNuiEvent } from '../../hooks/useNuiEvent';
+import { fetchNui } from '../../utils/fetchNui';
 import ScaleFade from '../../transitions/ScaleFade';
-import type {CircleProgressbarProps} from '../../typings';
+import type { CircleProgressbarProps } from '../../typings';
 
-// 33.5 is the r of the circle
-const progressCircle = keyframes({
-  '0%': { strokeDasharray: `0, ${33.5 * 2 * Math.PI}` },
-  '100%': { strokeDasharray: `${33.5 * 2 * Math.PI}, 0` },
-});
+const progressCircle = keyframes`
+  0% { stroke-dasharray: 0, ${33.5 * 2 * Math.PI}; }
+  100% { stroke-dasharray: ${33.5 * 2 * Math.PI}, 0; }
+`;
 
 const useStyles = createStyles((theme, params: { position: 'middle' | 'bottom'; duration: number }) => ({
   container: {
@@ -22,11 +23,10 @@ const useStyles = createStyles((theme, params: { position: 'middle' | 'bottom'; 
     alignItems: 'center',
   },
   progress: {
-    '> svg > circle:nth-child(1)': {
+    '> svg > circle:nth-of-type(1)': {
       stroke: theme.colors.dark[5],
     },
-    // Scuffed way of grabbing the first section and animating it
-    '> svg > circle:nth-child(2)': {
+    '> svg > circle:nth-of-type(2)': {
       transition: 'none',
       animation: `${progressCircle} linear forwards`,
       animationDuration: `${params.duration}ms`,
@@ -70,34 +70,45 @@ const CircleProgressbar: React.FC = () => {
     setLabel(data.label || '');
     setProgressDuration(data.duration);
     setPosition(data.position || 'middle');
-    const onePercent = data.duration * 0.01;
-    const updateProgress = setInterval(() => {
-      setValue((previousValue) => {
-        const newValue = previousValue + 1;
-        newValue >= 100 && clearInterval(updateProgress);
-        return newValue;
-      });
-    }, onePercent);
   });
 
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    if (visible && value < 100) {
+      const onePercent = progressDuration * 0.01;
+      interval = setInterval(() => {
+        setValue((previousValue) => {
+          const newValue = previousValue + 1;
+          if (newValue >= 100) {
+            clearInterval(interval);
+            setTimeout(() => setVisible(false), 200);
+          }
+          return newValue;
+        });
+      }, onePercent);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [visible, progressDuration, value]);
+
   return (
-    <>
-      <Stack spacing={0} className={classes.container}>
-        <ScaleFade visible={visible} onExitComplete={() => fetchNui('progressComplete')}>
-          <Stack spacing={0} align="center" className={classes.wrapper}>
-            <RingProgress
-              size={90}
-              thickness={7}
-              sections={[{ value: 0, color: theme.primaryColor }]}
-              onAnimationEnd={() => setVisible(false)}
-              className={classes.progress}
-              label={<Text className={classes.value}>{value}%</Text>}
-            />
-            {label && <Text className={classes.label}>{label}</Text>}
-          </Stack>
-        </ScaleFade>
-      </Stack>
-    </>
+    <Stack gap={0} className={classes.container}>
+      <ScaleFade visible={visible} onExitComplete={() => fetchNui('progressComplete')}>
+        <Stack gap={0} align="center" className={classes.wrapper}>
+          <RingProgress
+            size={90}
+            thickness={7}
+            sections={[{ value: value, color: theme.primaryColor }]}
+            className={classes.progress}
+            label={<Text className={classes.value}>{value}%</Text>}
+          />
+          {label && <Text className={classes.label}>{label}</Text>}
+        </Stack>
+      </ScaleFade>
+    </Stack>
   );
 };
 

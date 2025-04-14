@@ -1,9 +1,9 @@
-import { Box, createStyles, Stack, Tooltip } from '@mantine/core';
+import { Box, Stack, Tooltip, FocusTrap } from '@mantine/core';
+import { createStyles } from '@mantine/emotion';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
 import ListItem from './ListItem';
 import Header from './Header';
-import FocusTrap from 'focus-trap-react';
 import { fetchNui } from '../../../utils/fetchNui';
 import type { MenuPosition, MenuSettings } from '../../../typings';
 import LibIcon from '../../../components/LibIcon';
@@ -147,8 +147,8 @@ const ListMenu: React.FC = () => {
         menu.items[selected].values
           ? indexStates[selected]
           : menu.items[selected].checked
-          ? checkedStates[selected]
-          : null,
+            ? checkedStates[selected]
+            : null,
         menu.items[selected].values ? 'isScroll' : menu.items[selected].checked ? 'isCheck' : null,
       ]).catch();
     }, 100);
@@ -212,14 +212,14 @@ const ListMenu: React.FC = () => {
                 !!menu.items[selected].values[indexStates[selected]].description
               : !!menu.items[selected].description
           }
-          transitionDuration={0}
+          transitionProps={{ duration: 0 }}
           classNames={{ tooltip: classes.tooltip }}
         >
           <Box className={classes.container}>
             <Header title={menu.title} />
             <Box className={classes.buttonsWrapper} onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => moveMenu(e)}>
               <FocusTrap active={visible}>
-                <Stack spacing={8} p={8} sx={{ overflowY: 'scroll' }}>
+                <Stack gap={8} p={8} style={{ overflowY: 'scroll' }}>
                   {menu.items.map((item, index) => (
                     <React.Fragment key={`menu-item-${index}`}>
                       {item.label && (

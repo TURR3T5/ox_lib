@@ -12,7 +12,7 @@ const CheckboxField: React.FC<Props> = (props) => {
   return (
     <Checkbox
       {...props.register}
-      sx={{ display: 'flex' }}
+      style={{ display: 'flex' }}
       required={props.row.required}
       label={props.row.label}
       defaultChecked={props.row.checked}

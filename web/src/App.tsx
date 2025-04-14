@@ -16,6 +16,7 @@ import RadialMenu from './features/menu/radial';
 import { theme } from './theme';
 import { MantineProvider } from '@mantine/core';
 import { useConfig } from './providers/ConfigProvider';
+import { emotionTransform, MantineEmotionProvider } from '@mantine/emotion';
 
 const App: React.FC = () => {
   const { config } = useConfig();
@@ -27,18 +28,20 @@ const App: React.FC = () => {
   fetchNui('init');
 
   return (
-    <MantineProvider withNormalizeCSS withGlobalStyles theme={{ ...theme, ...config }}>
-      <Progressbar />
-      <CircleProgressbar />
-      <Notifications />
-      <TextUI />
-      <InputDialog />
-      <AlertDialog />
-      <ContextMenu />
-      <ListMenu />
-      <RadialMenu />
-      <SkillCheck />
-      {isEnvBrowser() && <Dev />}
+    <MantineProvider stylesTransform={emotionTransform} defaultColorScheme="dark" theme={{ ...theme, ...config }}>
+      <MantineEmotionProvider>
+        <Progressbar />
+        <CircleProgressbar />
+        <Notifications />
+        <TextUI />
+        <InputDialog />
+        <AlertDialog />
+        <ContextMenu />
+        <ListMenu />
+        <RadialMenu />
+        <SkillCheck />
+        {isEnvBrowser() && <Dev />}
+      </MantineEmotionProvider>
     </MantineProvider>
   );
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
-import { Box, createStyles, Group } from '@mantine/core';
+import { Box, Group } from '@mantine/core';
+import { createStyles } from '@mantine/emotion';
 import ReactMarkdown from 'react-markdown';
 import ScaleFade from '../../transitions/ScaleFade';
 import remarkGfm from 'remark-gfm';
@@ -54,7 +55,7 @@ const TextUI: React.FC = () => {
       <Box className={classes.wrapper}>
         <ScaleFade visible={visible}>
           <Box style={data.style} className={classes.container}>
-            <Group spacing={12}>
+            <Group gap={12}>
               {data.icon && (
                 <LibIcon
                   icon={data.icon}

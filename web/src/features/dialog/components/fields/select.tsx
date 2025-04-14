@@ -21,7 +21,10 @@ const SelectField: React.FC<Props> = (props) => {
     <>
       {props.row.type === 'select' ? (
         <Select
-          data={props.row.options}
+          data={props.row.options.map((option) => ({
+            ...option,
+            label: option.label || '',
+          }))}
           value={controller.field.value}
           name={controller.field.name}
           ref={controller.field.ref}
@@ -33,13 +36,16 @@ const SelectField: React.FC<Props> = (props) => {
           withAsterisk={props.row.required}
           clearable={props.row.clearable}
           searchable={props.row.searchable}
-          icon={props.row.icon && <LibIcon icon={props.row.icon} fixedWidth />}
+          leftSection={props.row.icon && <LibIcon icon={props.row.icon} fixedWidth />}
         />
       ) : (
         <>
           {props.row.type === 'multi-select' && (
             <MultiSelect
-              data={props.row.options}
+              data={props.row.options.map((option) => ({
+                ...option,
+                label: option.label || '',
+              }))}
               value={controller.field.value}
               name={controller.field.name}
               ref={controller.field.ref}
@@ -51,8 +57,8 @@ const SelectField: React.FC<Props> = (props) => {
               withAsterisk={props.row.required}
               clearable={props.row.clearable}
               searchable={props.row.searchable}
-              maxSelectedValues={props.row.maxSelectedValues}
-              icon={props.row.icon && <LibIcon icon={props.row.icon} fixedWidth />}
+              maxValues={props.row.maxSelectedValues}
+              leftSection={props.row.icon && <LibIcon icon={props.row.icon} fixedWidth />}
             />
           )}
         </>

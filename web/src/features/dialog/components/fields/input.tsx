@@ -1,4 +1,5 @@
-import { createStyles, PasswordInput, TextInput } from '@mantine/core';
+import { PasswordInput, TextInput } from '@mantine/core';
+import { createStyles } from '@mantine/emotion';
 import React from 'react';
 import { IInput } from '../../../../typings/dialog';
 import { UseFormRegisterReturn } from 'react-hook-form';
@@ -27,7 +28,7 @@ const InputField: React.FC<Props> = (props) => {
           defaultValue={props.row.default}
           label={props.row.label}
           description={props.row.description}
-          icon={props.row.icon && <LibIcon icon={props.row.icon} fixedWidth />}
+          leftSection={props.row.icon && <LibIcon icon={props.row.icon} fixedWidth />}
           placeholder={props.row.placeholder}
           minLength={props.row.min}
           maxLength={props.row.max}
@@ -40,16 +41,16 @@ const InputField: React.FC<Props> = (props) => {
           defaultValue={props.row.default}
           label={props.row.label}
           description={props.row.description}
-          icon={props.row.icon && <LibIcon icon={props.row.icon} fixedWidth />}
+          leftSection={props.row.icon && <LibIcon icon={props.row.icon} fixedWidth />}
           placeholder={props.row.placeholder}
           minLength={props.row.min}
           maxLength={props.row.max}
           disabled={props.row.disabled}
           withAsterisk={props.row.required}
-          visibilityToggleIcon={({ reveal, size }) => (
+          visibilityToggleIcon={({ reveal }) => (
             <LibIcon
               icon={reveal ? 'eye-slash' : 'eye'}
-              fontSize={size}
+              fontSize={16}
               cursor="pointer"
               className={classes.eyeIcon}
               fixedWidth

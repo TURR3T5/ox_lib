@@ -1,4 +1,5 @@
-import { Checkbox, createStyles } from '@mantine/core';
+import { Checkbox } from '@mantine/core';
+import { createStyles } from '@mantine/emotion';
 
 const useStyles = createStyles((theme) => ({
   root: {

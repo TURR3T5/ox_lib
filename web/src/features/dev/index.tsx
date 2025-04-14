@@ -22,7 +22,7 @@ const Dev: React.FC = () => {
           radius="xl"
           variant="filled"
           color="orange"
-          sx={{ position: 'absolute', bottom: 0, right: 0, width: 50, height: 50 }}
+          style={{ position: 'absolute', bottom: 0, right: 0, width: 50, height: 50 }}
           size="xl"
           mr={50}
           mb={50}

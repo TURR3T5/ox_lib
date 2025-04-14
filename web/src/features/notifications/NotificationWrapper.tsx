@@ -1,84 +1,127 @@
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { toast, Toaster } from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
-import { Box, Center, createStyles, Group, keyframes, RingProgress, Stack, Text, ThemeIcon } from '@mantine/core';
+import { Box, Center, Group, RingProgress, Stack, Text, ThemeIcon } from '@mantine/core';
+import { createStyles } from '@mantine/emotion';
 import React, { useState } from 'react';
 import tinycolor from 'tinycolor2';
 import type { NotificationProps } from '../../typings';
 import MarkdownComponents from '../../config/MarkdownComponents';
 import LibIcon from '../../components/LibIcon';
+import { keyframes } from '@emotion/react';
 
-const useStyles = createStyles((theme) => ({
-  container: {
-    width: 300,
-    height: 'fit-content',
-    backgroundColor: theme.colors.dark[6],
-    color: theme.colors.dark[0],
-    padding: 12,
-    borderRadius: theme.radius.sm,
-    fontFamily: 'Roboto',
-    boxShadow: theme.shadows.sm,
-  },
-  title: {
-    fontWeight: 500,
-    lineHeight: 'normal',
-  },
-  description: {
-    fontSize: 12,
-    color: theme.colors.dark[2],
-    fontFamily: 'Roboto',
-    lineHeight: 'normal',
-  },
-  descriptionOnly: {
-    fontSize: 14,
-    color: theme.colors.dark[2],
-    fontFamily: 'Roboto',
-    lineHeight: 'normal',
-  },
-}));
+// Define animations
+const slideInFromTop = keyframes`
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
 
-const createAnimation = (from: string, to: string, visible: boolean) => keyframes({
-  from: {
-    opacity: visible ? 0 : 1,
-    transform: `translate${from}`,
-  },
-  to: {
-    opacity: visible ? 1 : 0,
-    transform: `translate${to}`,
-  },
-});
+const slideInFromBottom = keyframes`
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
 
-const getAnimation = (visible: boolean, position: string) => {
-  const animationOptions = visible ? '0.2s ease-out forwards' : '0.4s ease-in forwards'
-  let animation: { from: string; to: string };
+const slideOutToRight = keyframes`
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(100%); }
+`;
 
-  if (visible) {
-    animation = position.includes('bottom') ? { from: 'Y(30px)', to: 'Y(0px)' } : { from: 'Y(-30px)', to:'Y(0px)' };
-  } else {
-    if (position.includes('right')) {
-      animation = { from: 'X(0px)', to: 'X(100%)' }
-    } else if (position.includes('left')) {
-      animation = { from: 'X(0px)', to: 'X(-100%)' };
-    } else if (position === 'top-center') {
-      animation = { from: 'Y(0px)', to: 'Y(-100%)' };
-    } else if (position === 'bottom') {
-      animation = { from: 'Y(0px)', to: 'Y(100%)' };
-    } else {
-      animation = { from: 'X(0px)', to: 'X(100%)' };
-    }
-  }
+const slideOutToLeft = keyframes`
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(-100%); }
+`;
 
-  return `${createAnimation(animation.from, animation.to, visible)} ${animationOptions}`
-};
+const slideOutToTop = keyframes`
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-100%); }
+`;
 
-const durationCircle = keyframes({
-  '0%': { strokeDasharray: `0, ${15.1 * 2 * Math.PI}` },
-  '100%': { strokeDasharray: `${15.1 * 2 * Math.PI}, 0` },
+const slideOutToBottom = keyframes`
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(100%); }
+`;
+
+const durationCircle = keyframes`
+  0% { stroke-dasharray: 0, ${15.1 * 2 * Math.PI}; }
+  100% { stroke-dasharray: ${15.1 * 2 * Math.PI}, 0; }
+`;
+
+const useStyles = createStyles((theme) => {
+  return {
+    container: {
+      width: 300,
+      height: 'fit-content',
+      backgroundColor: theme.colors.dark[6],
+      color: theme.colors.dark[0],
+      padding: 12,
+      borderRadius: theme.radius.sm,
+      fontFamily: 'Roboto',
+      boxShadow: theme.shadows.sm,
+    },
+    title: {
+      fontWeight: 500,
+      lineHeight: 'normal',
+    },
+    description: {
+      fontSize: 12,
+      color: theme.colors.dark[2],
+      fontFamily: 'Roboto',
+      lineHeight: 'normal',
+    },
+    descriptionOnly: {
+      fontSize: 14,
+      color: theme.colors.dark[2],
+      fontFamily: 'Roboto',
+      lineHeight: 'normal',
+    },
+    animationIn: {
+      animation: `${slideInFromTop} 0.2s ease-out forwards`,
+    },
+    animationInBottom: {
+      animation: `${slideInFromBottom} 0.2s ease-out forwards`,
+    },
+    animationOutRight: {
+      animation: `${slideOutToRight} 0.4s ease-in forwards`,
+    },
+    animationOutLeft: {
+      animation: `${slideOutToLeft} 0.4s ease-in forwards`,
+    },
+    animationOutTop: {
+      animation: `${slideOutToTop} 0.4s ease-in forwards`,
+    },
+    animationOutBottom: {
+      animation: `${slideOutToBottom} 0.4s ease-in forwards`,
+    },
+    circleAnimation: {
+      '& > svg > circle:nth-of-type(2)': {
+        animation: `${durationCircle} linear forwards reverse`,
+      },
+    },
+  };
 });
 
 const Notifications: React.FC = () => {
   const { classes } = useStyles();
   const [toastKey, setToastKey] = useState(0);
+
+  // Helper function to determine which animation class to use
+  const getAnimationClass = (visible: boolean, position: string) => {
+    if (visible) {
+      return position.includes('bottom') ? classes.animationInBottom : classes.animationIn;
+    } else {
+      if (position.includes('right')) {
+        return classes.animationOutRight;
+      } else if (position.includes('left')) {
+        return classes.animationOutLeft;
+      } else if (position === 'top-center') {
+        return classes.animationOutTop;
+      } else if (position === 'bottom') {
+        return classes.animationOutBottom;
+      } else {
+        return classes.animationOutRight;
+      }
+    }
+  };
 
   useNuiEvent<NotificationProps>('notify', (data) => {
     if (!data.title && !data.description) return;
@@ -91,7 +134,7 @@ const Notifications: React.FC = () => {
 
     data.showDuration = data.showDuration !== undefined ? data.showDuration : true;
 
-    if (toastId) setToastKey(prevKey => prevKey + 1);
+    if (toastId) setToastKey((prevKey) => prevKey + 1);
 
     // Backwards compat with old notifications
     switch (position) {
@@ -138,17 +181,11 @@ const Notifications: React.FC = () => {
     } else {
       iconColor = tinycolor(data.iconColor).toRgbString();
     }
-    
+
     toast.custom(
       (t) => (
-        <Box
-          sx={{
-            animation: getAnimation(t.visible, position),
-            ...data.style,
-          }}
-          className={`${classes.container}`}
-        >
-          <Group noWrap spacing={12}>
+        <Box className={`${classes.container} ${getAnimationClass(t.visible, position)}`} sx={data.style}>
+          <Group wrap="nowrap" gap={12}>
             {data.icon && (
               <>
                 {data.showDuration ? (
@@ -193,15 +230,12 @@ const Notifications: React.FC = () => {
                 )}
               </>
             )}
-            <Stack spacing={0}>
+            <Stack gap={0}>
               {data.title && <Text className={classes.title}>{data.title}</Text>}
               {data.description && (
-                <ReactMarkdown
-                  components={MarkdownComponents}
-                  className={`${!data.title ? classes.descriptionOnly : classes.description} description`}
-                >
-                  {data.description}
-                </ReactMarkdown>
+                <div className={`${!data.title ? classes.descriptionOnly : classes.description} description`}>
+                  <ReactMarkdown components={MarkdownComponents}>{data.description}</ReactMarkdown>
+                </div>
               )}
             </Stack>
           </Group>

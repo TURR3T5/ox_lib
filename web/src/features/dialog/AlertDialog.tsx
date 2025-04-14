@@ -1,4 +1,5 @@
-import { Button, createStyles, Group, Modal, Stack, useMantineTheme } from '@mantine/core';
+import { Button, Group, Modal, Stack, useMantineTheme } from '@mantine/core';
+import { createStyles } from '@mantine/emotion';
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
@@ -44,16 +45,15 @@ const AlertDialog: React.FC = () => {
         opened={opened}
         centered={dialogData.centered}
         size={dialogData.size || 'md'}
-        overflow={dialogData.overflow ? 'inside' : 'outside'}
+        style={{ overflow: dialogData.overflow ? 'inside' : 'outside' }}
         closeOnClickOutside={false}
         onClose={() => {
           setOpened(false);
           closeAlert('cancel');
         }}
         withCloseButton={false}
-        overlayOpacity={0.5}
-        exitTransitionDuration={150}
-        transition="fade"
+        overlayProps={{ backgroundOpacity: 0.5 }}
+        transitionProps={{ duration: 150, transition: 'fade' }}
         title={<ReactMarkdown components={MarkdownComponents}>{dialogData.header}</ReactMarkdown>}
       >
         <Stack className={classes.contentStack}>
@@ -66,14 +66,14 @@ const AlertDialog: React.FC = () => {
           >
             {dialogData.content}
           </ReactMarkdown>
-          <Group position="right" spacing={10}>
+          <Group justify="flex-end" gap={10}>
             {dialogData.cancel && (
-              <Button uppercase variant="default" onClick={() => closeAlert('cancel')} mr={3}>
+              <Button tt="uppercase" variant="default" onClick={() => closeAlert('cancel')} mr={3}>
                 {dialogData.labels?.cancel || locale.ui.cancel}
               </Button>
             )}
             <Button
-              uppercase
+              tt="uppercase"
               variant={dialogData.cancel ? 'light' : 'default'}
               color={dialogData.cancel ? theme.primaryColor : undefined}
               onClick={() => closeAlert('confirm')}

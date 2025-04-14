@@ -10,6 +10,7 @@ import { isEnvBrowser } from './utils/misc';
 import LocaleProvider from './providers/LocaleProvider';
 import ConfigProvider from './providers/ConfigProvider';
 import ErrorBoundary from './providers/errorBoundary';
+import '@mantine/core/styles.css';
 
 library.add(fas, far, fab);
 
