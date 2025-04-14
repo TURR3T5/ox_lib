@@ -5,7 +5,6 @@ import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { fetchNui } from '../../utils/fetchNui';
 import ScaleFade from '../../transitions/ScaleFade';
 import type { ProgressbarProps } from '../../typings';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -46,23 +45,6 @@ const useStyles = createStyles((theme) => ({
     fontWeight: 700,
     color: 'white',
   },
-  iconWrapper: {
-    position: 'absolute',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    top: -17.5,
-    zIndex: 10,
-  },
-  iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 4,
-    border: '1px solid #FF7A00',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
   progressContainer: {
     width: '100%',
     display: 'flex',
@@ -78,7 +60,8 @@ const useStyles = createStyles((theme) => ({
     height: 12,
     flex: 1,
     borderRadius: 4,
-    marginRight: 5,
+    marginRight: 4,
+    marginLeft: 2,
     transform: 'skew(-15deg)',
   },
   activeSegment: {
@@ -152,14 +135,6 @@ const Progressbar: React.FC = () => {
     <Box className={classes.wrapper}>
       <ScaleFade visible={visible} onExitComplete={() => fetchNui('progressComplete')}>
         <Box className={classes.container}>
-          <Box className={classes.iconWrapper}>
-            <Box className={classes.iconContainer}>
-              <ActionIcon variant="light" size={40} color="#FF7A00" radius="md">
-                <FontAwesomeIcon icon={['fas', 'circle-notch']} spin size="lg" color="FF7A00" />
-              </ActionIcon>
-            </Box>
-          </Box>
-
           <Box className={classes.header}>
             <Box className={classes.labelRow}>
               <Text className={classes.label}>{label}</Text>

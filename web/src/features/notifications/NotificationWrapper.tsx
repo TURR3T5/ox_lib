@@ -10,7 +10,6 @@ import MarkdownComponents from '../../config/MarkdownComponents';
 import LibIcon from '../../components/LibIcon';
 import { keyframes } from '@emotion/react';
 
-// Define animations
 const slideInFromTop = keyframes`
   from { opacity: 0; transform: translateY(-30px); }
   to { opacity: 1; transform: translateY(0); }
@@ -51,10 +50,10 @@ const useStyles = createStyles((theme) => {
     container: {
       width: 300,
       height: 'fit-content',
-      backgroundColor: theme.colors.dark[6],
+      backgroundColor: theme.colors.dark[8],
       color: theme.colors.dark[0],
       padding: 12,
-      borderRadius: theme.radius.sm,
+      borderRadius: theme.radius.md,
       fontFamily: 'Roboto',
       boxShadow: theme.shadows.sm,
     },
@@ -104,21 +103,21 @@ const Notifications: React.FC = () => {
   const { classes } = useStyles();
   const [toastKey, setToastKey] = useState(0);
 
-  // Helper function to determine which animation class to use
   const getAnimationClass = (visible: boolean, position: string) => {
     if (visible) {
       return position.includes('bottom') ? classes.animationInBottom : classes.animationIn;
     } else {
-      if (position.includes('right')) {
-        return classes.animationOutRight;
-      } else if (position.includes('left')) {
-        return classes.animationOutLeft;
-      } else if (position === 'top-center') {
-        return classes.animationOutTop;
-      } else if (position === 'bottom') {
-        return classes.animationOutBottom;
-      } else {
-        return classes.animationOutRight;
+      switch (true) {
+        case position.includes('right'):
+          return classes.animationOutRight;
+        case position.includes('left'):
+          return classes.animationOutLeft;
+        case position === 'top-center':
+          return classes.animationOutTop;
+        case position === 'bottom':
+          return classes.animationOutBottom;
+        default:
+          return classes.animationOutRight;
       }
     }
   };
@@ -136,7 +135,6 @@ const Notifications: React.FC = () => {
 
     if (toastId) setToastKey((prevKey) => prevKey + 1);
 
-    // Backwards compat with old notifications
     switch (position) {
       case 'top':
         position = 'top-center';
@@ -175,7 +173,7 @@ const Notifications: React.FC = () => {
           iconColor = 'yellow.6';
           break;
         default:
-          iconColor = 'blue.6';
+          iconColor = 'orange.7';
           break;
       }
     } else {

@@ -27,16 +27,19 @@ const useStyles = createStyles((theme) => ({
     alignItems: 'center',
     marginBottom: 10,
     gap: 6,
+    opacity: '0.9',
   },
   titleContainer: {
-    borderRadius: 4,
+    borderRadius: 8,
     flex: '1 85%',
-    backgroundColor: theme.colors.dark[6],
+    backgroundColor: theme.colors.dark[8],
   },
   titleText: {
     color: theme.colors.dark[0],
+    fontWeight: 600,
     padding: 6,
     textAlign: 'center',
+    letterSpacing: '0.5px',
   },
   buttonsContainer: {
     height: 560,

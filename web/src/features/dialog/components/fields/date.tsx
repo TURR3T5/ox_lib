@@ -1,7 +1,7 @@
 import { IDateInput } from '../../../../typings/dialog';
 import { Control, useController } from 'react-hook-form';
 import { FormValues } from '../../InputDialog';
-import { DatePicker, DatePickerInput } from '@mantine/dates';
+import { DatePickerInput } from '@mantine/dates';
 import LibIcon from '../../../../components/LibIcon';
 
 interface Props {

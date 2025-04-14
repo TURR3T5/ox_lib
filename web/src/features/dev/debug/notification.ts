@@ -41,4 +41,30 @@ export const debugCustomNotification = () => {
       },
     },
   ]);
+  debugData<NotificationProps>([
+    {
+      action: 'notify',
+      data: {
+        title: 'Custom icon error',
+        description: 'Notification description',
+        type: 'info',
+        icon: 'microchip',
+        showDuration: false,
+      },
+    },
+  ]);
+  debugData<NotificationProps>([
+    {
+      action: 'notify',
+      data: {
+        title: 'Hexagon test',
+        description: 'Notification description',
+        type: 'error',
+        duration: 20000,
+        icon: 'microchip',
+        showDuration: false,
+        shape: 'hexagon',
+      },
+    },
+  ]);
 };

@@ -11,6 +11,7 @@ import LocaleProvider from './providers/LocaleProvider';
 import ConfigProvider from './providers/ConfigProvider';
 import ErrorBoundary from './providers/errorBoundary';
 import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
 
 library.add(fas, far, fab);
 

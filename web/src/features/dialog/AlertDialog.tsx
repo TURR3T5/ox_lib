@@ -75,7 +75,7 @@ const AlertDialog: React.FC = () => {
             <Button
               tt="uppercase"
               variant={dialogData.cancel ? 'light' : 'default'}
-              color={dialogData.cancel ? theme.primaryColor : undefined}
+              color={dialogData.cancel ? 'orange.7' : undefined}
               onClick={() => closeAlert('confirm')}
             >
               {dialogData.labels?.confirm || locale.ui.confirm}

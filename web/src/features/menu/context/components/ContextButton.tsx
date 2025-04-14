@@ -1,4 +1,4 @@
-import { Button, Group, HoverCard, Image, Progress, Stack, Text } from '@mantine/core';
+import { Button, Group, ThemeIcon, HoverCard, Image, Progress, Stack, Text, Box } from '@mantine/core';
 import { createStyles } from '@mantine/emotion';
 import ReactMarkdown from 'react-markdown';
 import { ContextMenuProps, Option } from '../../../../typings';
@@ -16,9 +16,11 @@ const clickContext = (id: string) => {
   fetchNui('clickContext', id);
 };
 
-const useStyles = createStyles((theme, params: { disabled?: boolean; readOnly?: boolean }) => ({
+const useStyles = createStyles((theme, params: { disabled?: boolean; readOnly?: boolean; colorScheme?: string }) => ({
   inner: {
     justifyContent: 'flex-start',
+    position: 'relative',
+    paddingLeft: 10,
   },
   label: {
     width: '100%',
@@ -26,9 +28,13 @@ const useStyles = createStyles((theme, params: { disabled?: boolean; readOnly?: 
     whiteSpace: 'pre-wrap',
   },
   button: {
+    borderRadius: 8,
     height: 'fit-content',
     width: '100%',
     padding: 10,
+    position: 'relative',
+    backgroundColor: theme.colors.dark[8],
+    opacity: '0.9',
     '&:hover': {
       backgroundColor: params.readOnly ? theme.colors.dark[6] : undefined,
       cursor: params.readOnly ? 'unset' : 'pointer',
@@ -37,22 +43,35 @@ const useStyles = createStyles((theme, params: { disabled?: boolean; readOnly?: 
       transform: params.readOnly ? 'unset' : undefined,
     },
   },
+  verticalDivider: {
+    position: 'absolute',
+    left: 0,
+    top: '2.5%',
+    height: '95%',
+    width: 3,
+    borderRadius: 4,
+    background: 'linear-gradient(to bottom, #FF7B00, #FF9E00)',
+    boxShadow: '0 0 8px rgba(255, 123, 0, 0.6)',
+  },
   iconImage: {
     maxWidth: '25px',
   },
   description: {
     color: params.disabled ? theme.colors.dark[3] : theme.colors.dark[2],
     fontSize: 12,
+    alignSelf: 'flex-start',
   },
   dropdown: {
-    padding: 10,
+    padding: 12,
     color: theme.colors.dark[0],
     fontSize: 14,
     maxWidth: 256,
     width: 'fit-content',
     border: 'none',
+    backgroundColor: theme.colors.dark[8],
   },
   buttonStack: {
+    marginLeft: 4,
     gap: 4,
     flex: '1',
   },
@@ -61,8 +80,8 @@ const useStyles = createStyles((theme, params: { disabled?: boolean; readOnly?: 
     flexWrap: 'nowrap',
   },
   buttonIconContainer: {
-    width: 25,
-    height: 25,
+    width: 30,
+    height: 30,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -82,13 +101,18 @@ const ContextButton: React.FC<{
 }> = ({ option }) => {
   const button = option[1];
   const buttonKey = option[0];
-  const { classes } = useStyles({ disabled: button.disabled, readOnly: button.readOnly });
+  const { classes } = useStyles({
+    disabled: button.disabled,
+    readOnly: button.readOnly,
+    colorScheme: button.colorScheme,
+  });
 
   return (
     <>
       <HoverCard
         position="right-start"
         disabled={button.disabled || !(button.metadata || button.image)}
+        shadow="md"
         openDelay={200}
       >
         <HoverCard.Target>
@@ -104,6 +128,7 @@ const ContextButton: React.FC<{
             variant="default"
             disabled={button.disabled}
           >
+            <Box className={classes.verticalDivider} />
             <Group justify="space-between" w="100%" wrap="nowrap">
               <Stack className={classes.buttonStack}>
                 {(button.title || Number.isNaN(+buttonKey)) && (
@@ -113,13 +138,15 @@ const ContextButton: React.FC<{
                         {typeof button.icon === 'string' && isIconUrl(button.icon) ? (
                           <img src={button.icon} className={classes.iconImage} alt="Missing img" />
                         ) : (
-                          <LibIcon
-                            icon={button.icon as IconProp}
-                            fixedWidth
-                            size="lg"
-                            style={{ color: button.iconColor }}
-                            animation={button.iconAnimation}
-                          />
+                          <ThemeIcon variant="light" size="md" color="orange.7" fz={12}>
+                            <LibIcon
+                              icon={button.icon as IconProp}
+                              fixedWidth
+                              size="lg"
+                              style={{ color: button.iconColor }}
+                              animation={button.iconAnimation}
+                            />
+                          </ThemeIcon>
                         )}
                       </Stack>
                     )}
@@ -145,8 +172,8 @@ const ContextButton: React.FC<{
             </Group>
           </Button>
         </HoverCard.Target>
-        <HoverCard.Dropdown className={classes.dropdown}>
-          {button.image && <Image src={button.image} />}
+        <HoverCard.Dropdown className={classes.dropdown} opacity={0.9}>
+          {button.image && <Image src={button.image} radius="sm" />}
           {Array.isArray(button.metadata) ? (
             button.metadata.map(
               (
@@ -154,7 +181,7 @@ const ContextButton: React.FC<{
                 index: number
               ) => (
                 <>
-                  <Text key={`context-metadata-${index}`}>
+                  <Text key={`context-metadata-${index}`} mt="6" p="2">
                     {typeof metadata === 'string' ? `${metadata}` : `${metadata.label}: ${metadata?.value ?? ''}`}
                   </Text>
 

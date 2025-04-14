@@ -1,4 +1,4 @@
-import { Box, Group, Progress, Stack, Text } from '@mantine/core';
+import { Box, Group, Progress, Stack, Text, ThemeIcon } from '@mantine/core';
 import { createStyles } from '@mantine/emotion';
 import React, { forwardRef } from 'react';
 import CustomCheckbox from './CustomCheckbox';
@@ -16,13 +16,15 @@ interface Props {
 
 const useStyles = createStyles((theme, params: { iconColor?: string }) => ({
   buttonContainer: {
-    backgroundColor: theme.colors.dark[6],
+    backgroundColor: theme.colors.dark[8],
     borderRadius: theme.radius.md,
     padding: 2,
     height: 60,
+    opacity: 0.9,
     scrollMargin: 8,
     '&:focus': {
-      backgroundColor: theme.colors.dark[4],
+      backgroundColor: theme.colors.dark[7],
+      opacity: 0.95,
       outline: 'none',
     },
   },
@@ -37,12 +39,12 @@ const useStyles = createStyles((theme, params: { iconColor?: string }) => ({
   iconContainer: {
     display: 'flex',
     alignItems: 'center',
-    width: 32,
-    height: 32,
+    width: 30,
+    height: 30,
   },
   icon: {
-    fontSize: 24,
-    color: params.iconColor || theme.colors.dark[2],
+    color: params.iconColor || theme.colors.orange[7],
+    opacity: 1,
   },
   label: {
     color: theme.colors.dark[2],
@@ -90,12 +92,15 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
             {typeof item.icon === 'string' && isIconUrl(item.icon) ? (
               <img src={item.icon} alt="Missing image" className={classes.iconImage} />
             ) : (
-              <LibIcon
-                icon={item.icon as IconProp}
-                className={classes.icon}
-                fixedWidth
-                animation={item.iconAnimation}
-              />
+              <ThemeIcon variant="light" size="lg" color="orange.7" fz={16}>
+                <LibIcon
+                  icon={item.icon as IconProp}
+                  className={classes.icon}
+                  fixedWidth
+                  size="lg"
+                  animation={item.iconAnimation}
+                />
+              </ThemeIcon>
             )}
           </Box>
         )}

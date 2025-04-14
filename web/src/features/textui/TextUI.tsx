@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
-import { Box, Group } from '@mantine/core';
+import { Box, Group, ThemeIcon } from '@mantine/core';
 import { createStyles } from '@mantine/emotion';
 import ReactMarkdown from 'react-markdown';
 import ScaleFade from '../../transitions/ScaleFade';
@@ -15,12 +15,10 @@ const useStyles = createStyles((theme, params: { position?: TextUiPosition }) =>
     width: '100%',
     position: 'absolute',
     display: 'flex',
-    alignItems: 
-      params.position === 'top-center' ? 'baseline' :
-      params.position === 'bottom-center' ? 'flex-end' : 'center',
-    justifyContent: 
-      params.position === 'right-center' ? 'flex-end' :
-      params.position === 'left-center' ? 'flex-start' : 'center',
+    alignItems:
+      params.position === 'top-center' ? 'baseline' : params.position === 'bottom-center' ? 'flex-end' : 'center',
+    justifyContent:
+      params.position === 'right-center' ? 'flex-end' : params.position === 'left-center' ? 'flex-start' : 'center',
   },
   container: {
     fontSize: 16,
@@ -57,16 +55,18 @@ const TextUI: React.FC = () => {
           <Box style={data.style} className={classes.container}>
             <Group gap={12}>
               {data.icon && (
-                <LibIcon
-                  icon={data.icon}
-                  fixedWidth
-                  size="lg"
-                  animation={data.iconAnimation}
-                  style={{
-                    color: data.iconColor,
-                    alignSelf: !data.alignIcon || data.alignIcon === 'center' ? 'center' : 'start',
-                  }}
-                />
+                <ThemeIcon size="lg" variant="light" color="orange.7">
+                  <LibIcon
+                    icon={data.icon}
+                    fixedWidth
+                    size="lg"
+                    animation={data.iconAnimation}
+                    style={{
+                      color: data.iconColor,
+                      alignSelf: !data.alignIcon || data.alignIcon === 'center' ? 'center' : 'start',
+                    }}
+                  />
+                </ThemeIcon>
               )}
               <ReactMarkdown components={MarkdownComponents} remarkPlugins={[remarkGfm]}>
                 {data.text}

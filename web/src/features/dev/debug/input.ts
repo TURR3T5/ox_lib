@@ -16,7 +16,6 @@ export const debugInput = () => {
           },
           {
             type: 'time',
-            format: '12',
             label: 'Locker Time',
             description: 'Description that tells you what this input field does',
           },
