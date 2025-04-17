@@ -8,7 +8,7 @@ const useStyles = createStyles((theme) => ({
     borderTopLeftRadius: theme.radius.md,
     borderTopRightRadius: theme.radius.md,
     backgroundColor: theme.colors.dark[8],
-    opacity: 0.9,
+    opacity: 0.95,
     height: 60,
     width: 384,
     display: 'flex',

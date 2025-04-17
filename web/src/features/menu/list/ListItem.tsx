@@ -20,7 +20,7 @@ const useStyles = createStyles((theme, params: { iconColor?: string }) => ({
     borderRadius: theme.radius.md,
     padding: 2,
     height: 60,
-    opacity: 0.9,
+    opacity: 1,
     scrollMargin: 8,
     '&:focus': {
       backgroundColor: theme.colors.dark[7],
