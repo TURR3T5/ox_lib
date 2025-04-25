@@ -1,6 +1,6 @@
 import type { IconName, IconPrefix } from '@fortawesome/fontawesome-common-types';
 
-type MenuPosition = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+type MenuPosition = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'left-center' | 'right-center';
 type ChangeFunction = (selected: number, scrollIndex?: number, args?: any, checked?: boolean) => void;
 type IconAnimation = 'spin' | 'spinPulse' | 'spinReverse' | 'pulse' | 'beat' | 'fade' | 'beatFade' | 'bounce' | 'shake';
 

@@ -21,12 +21,21 @@ const useStyles = createStyles((theme, params: { position?: MenuPosition; itemCo
     position: 'absolute',
     pointerEvents: 'none',
     marginTop: params.position === 'top-left' || params.position === 'top-right' ? 5 : 0,
-    marginLeft: params.position === 'top-left' || params.position === 'bottom-left' ? 5 : 0,
-    marginRight: params.position === 'top-right' || params.position === 'bottom-right' ? 5 : 0,
+    marginLeft:
+      params.position === 'top-left' || params.position === 'bottom-left' || params.position === 'left-center' ? 5 : 0,
+    marginRight:
+      params.position === 'top-right' || params.position === 'bottom-right' || params.position === 'right-center'
+        ? 5
+        : 0,
     marginBottom: params.position === 'bottom-left' || params.position === 'bottom-right' ? 5 : 0,
-    right: params.position === 'top-right' || params.position === 'bottom-right' ? 1 : undefined,
-    left: params.position === 'bottom-left' ? 1 : undefined,
+    right:
+      params.position === 'top-right' || params.position === 'bottom-right' || params.position === 'right-center'
+        ? 1
+        : undefined,
+    left: params.position === 'bottom-left' || params.position === 'left-center' ? 1 : undefined,
     bottom: params.position === 'bottom-left' || params.position === 'bottom-right' ? 1 : undefined,
+    top: params.position === 'left-center' || params.position === 'right-center' ? '50%' : undefined,
+    transform: params.position === 'left-center' || params.position === 'right-center' ? 'translateY(-50%)' : undefined,
     fontFamily: 'Roboto',
     width: 384,
   },

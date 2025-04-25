@@ -6,7 +6,7 @@ export const debugMenu = () => {
     {
       action: 'setMenu',
       data: {
-        //   position: "bottom-left",
+        position: "left-center",
         title: 'Vehicle garage',
         items: [
           { label: 'Option 1', icon: 'heart' },
