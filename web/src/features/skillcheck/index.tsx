@@ -170,11 +170,11 @@ const SkillCheck: React.FC = () => {
               offset={skillCheck.difficultyOffset}
               multiplier={
                 skillCheck.difficulty === 'easy'
-                  ? 1
+                  ? 0.5
                   : skillCheck.difficulty === 'medium'
-                    ? 1.5
+                    ? 0.65
                     : skillCheck.difficulty === 'hard'
-                      ? 1.75
+                      ? 1
                       : skillCheck.difficulty.speedMultiplier
               }
               handleComplete={handleComplete}

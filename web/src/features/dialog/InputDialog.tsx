@@ -40,27 +40,31 @@ const InputDialog: React.FC = () => {
   useNuiEvent<InputProps>('openDialog', (data) => {
     setFields(data);
     setVisible(true);
-    data.rows.forEach((row, index) => {
-      fieldForm.insert(index, {
-        value:
-          row.type !== 'checkbox'
-            ? row.type === 'date' || row.type === 'date-range' || row.type === 'time'
-              ? // Set date to current one if default is set to true
-                row.default === true
-                ? new Date().getTime()
-                : Array.isArray(row.default)
-                  ? row.default.map((date) => new Date(date).getTime())
-                  : row.default && new Date(row.default).getTime()
-              : row.default
-            : row.checked,
-      });
-      // Backwards compat with new Select data type
+
+    const formattedRows = data.rows.map((row, index) => {
+      const defaultValue =
+        row.type === 'checkbox'
+          ? row.checked
+          : row.type === 'date' || row.type === 'date-range' || row.type === 'time'
+            ? row.default === true
+              ? new Date().getTime()
+              : Array.isArray(row.default)
+                ? row.default.map((date) => new Date(date).getTime())
+                : row.default && new Date(row.default).getTime()
+            : row.default;
+
       if (row.type === 'select' || row.type === 'multi-select') {
-        row.options = row.options.map((option) =>
-          !option.label ? { ...option, label: option.value } : option
-        ) as Array<OptionValue>;
+        row.options = row.options.map((option) => ({
+          ...option,
+          value: String(option.value),
+          label: option.label || String(option.value),
+        })) as Array<OptionValue>;
       }
+
+      return { value: defaultValue };
     });
+
+    fieldForm.replace(formattedRows);
   });
 
   useNuiEvent('closeInputDialog', async () => await handleClose(true));
