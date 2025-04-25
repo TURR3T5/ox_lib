@@ -26,6 +26,7 @@ const useStyles = createStyles((theme, params: { iconColor?: string }) => ({
       backgroundColor: theme.colors.dark[7],
       opacity: 0.95,
       outline: 'none',
+      boxShadow: `0 0 0 1.5px ${theme.colors.orange[7]}`,
     },
   },
   iconImage: {
