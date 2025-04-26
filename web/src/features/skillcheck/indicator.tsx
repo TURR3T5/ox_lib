@@ -17,21 +17,23 @@ const Indicator: React.FC<Props> = ({ angle, offset, multiplier, handleComplete,
   const interval = useInterval(
     () =>
       setIndicatorAngle((prevState) => {
-        return (prevState += multiplier);
+        const jitter = Math.random() * 0.05 - 0.025;
+        return (prevState += multiplier + jitter);
       }),
     1
   );
+
   const keyHandler = useCallback(
     (e: KeyboardEvent) => {
       const capitalHetaCode = 880;
       const isNonLatin = e.key.charCodeAt(0) >= capitalHetaCode;
-      var convKey = e.key.toLowerCase()
+      var convKey = e.key.toLowerCase();
       if (isNonLatin) {
-        if (e.code.indexOf('Key') === 0 && e.code.length === 4) { // i.e. 'KeyW'
+        if (e.code.indexOf('Key') === 0 && e.code.length === 4) {
           convKey = e.code.charAt(3);
         }
 
-        if (e.code.indexOf('Digit') === 0 && e.code.length === 6) { // i.e. 'Digit7'
+        if (e.code.indexOf('Digit') === 0 && e.code.length === 6) {
           convKey = e.code.charAt(5);
         }
       }
@@ -44,6 +46,13 @@ const Indicator: React.FC<Props> = ({ angle, offset, multiplier, handleComplete,
     setIndicatorAngle(-90);
     window.addEventListener('keydown', keyHandler);
     interval.start();
+
+    const randomDelay = Math.random() * 50;
+    setTimeout(() => {}, randomDelay);
+
+    return () => {
+      window.removeEventListener('keydown', keyHandler);
+    };
   }, [skillCheck]);
 
   useEffect(() => {
