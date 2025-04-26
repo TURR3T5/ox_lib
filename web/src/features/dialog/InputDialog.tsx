@@ -54,11 +54,16 @@ const InputDialog: React.FC = () => {
             : row.default;
 
       if (row.type === 'select' || row.type === 'multi-select') {
-        row.options = row.options.map((option) => ({
-          ...option,
-          value: String(option.value),
-          label: option.label || String(option.value),
-        })) as Array<OptionValue>;
+        row.options = row.options.map((option) => {
+          if (typeof option === 'string') {
+            return { value: option, label: option };
+          }
+          return {
+            ...option,
+            value: String(option.value),
+            label: option.label || String(option.value),
+          };
+        });
       }
 
       return { value: defaultValue };
