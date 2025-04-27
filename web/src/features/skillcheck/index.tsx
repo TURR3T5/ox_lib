@@ -139,11 +139,11 @@ const SkillCheck: React.FC = () => {
 
   const generateNoiseElements = () => {
     const newElements = [];
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 10; i++) {
       newElements.push({
-        cx: 250 + Math.sin(i * 0.5) * (30 + Math.random() * 20),
-        cy: 250 + Math.cos(i * 0.5) * (30 + Math.random() * 20),
-        r: 1 + Math.random() * 3,
+        cx: 250 + Math.sin(i * 0.5) * (20 + Math.random() * 10),
+        cy: 250 + Math.cos(i * 0.5) * (20 + Math.random() * 10),
+        r: 0.5 + Math.random() * 1.5,
         fill: getRandomColor(),
       });
     }
@@ -188,16 +188,16 @@ const SkillCheck: React.FC = () => {
     generateNoiseElements();
   }, []);
 
-  const handleComplete = (success: boolean) => {
+  const handleComplete = (success: boolean, percentage?: number) => {
     if (!dataRef.current) return;
     if (!success || !Array.isArray(dataRef.current.difficulty)) {
       setVisible(false);
-      return fetchNui('skillCheckOver', success);
+      return fetchNui('skillCheckOver', { success, percentage });
     }
 
     if (dataIndexRef.current >= dataRef.current.difficulty.length - 1) {
       setVisible(false);
-      return fetchNui('skillCheckOver', success);
+      return fetchNui('skillCheckOver', { success, percentage });
     }
 
     randomizeVisuals();
@@ -280,7 +280,7 @@ const SkillCheck: React.FC = () => {
               offset={skillCheck.difficultyOffset}
               multiplier={
                 skillCheck.difficulty === 'easy'
-                  ? 0.5
+                  ? 0.2
                   : skillCheck.difficulty === 'medium'
                     ? 0.65
                     : skillCheck.difficulty === 'hard'

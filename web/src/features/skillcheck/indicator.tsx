@@ -8,7 +8,7 @@ interface Props {
   multiplier: number;
   skillCheck: SkillCheckProps;
   className: string;
-  handleComplete: (success: boolean) => void;
+  handleComplete: (success: boolean, percentage?: number) => void;
 }
 
 const Indicator: React.FC<Props> = ({ angle, offset, multiplier, handleComplete, skillCheck, className }) => {
@@ -71,9 +71,12 @@ const Indicator: React.FC<Props> = ({ angle, offset, multiplier, handleComplete,
 
     window.removeEventListener('keydown', keyHandler);
 
-    if (keyPressed !== skillCheck.key || indicatorAngle < angle || indicatorAngle > angle + offset)
+    if (keyPressed !== skillCheck.key || indicatorAngle < angle || indicatorAngle > angle + offset) {
       handleComplete(false);
-    else handleComplete(true);
+    } else {
+      const hitPercentage = ((indicatorAngle - angle) / offset) * 100;
+      handleComplete(true, Math.min(Math.max(hitPercentage, 0), 100));
+    }
 
     setKeyPressed(false);
   }, [keyPressed]);

@@ -7,7 +7,7 @@ export const debugSkillCheck = () => {
       action: 'startSkillCheck',
       data: {
         difficulty: ['easy', 'easy', 'hard'],
-        inputs: ['W', 'A', 'S', 'D'],
+        inputs: ['E'],
       },
     },
   ]);
