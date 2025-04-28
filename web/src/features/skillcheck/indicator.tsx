@@ -17,8 +17,7 @@ const Indicator: React.FC<Props> = ({ angle, offset, multiplier, handleComplete,
   const interval = useInterval(
     () =>
       setIndicatorAngle((prevState) => {
-        const jitter = Math.random() * 0.05 - 0.025;
-        return (prevState += multiplier + jitter);
+        return (prevState += multiplier);
       }),
     1
   );
@@ -46,13 +45,6 @@ const Indicator: React.FC<Props> = ({ angle, offset, multiplier, handleComplete,
     setIndicatorAngle(-90);
     window.addEventListener('keydown', keyHandler);
     interval.start();
-
-    const randomDelay = Math.random() * 50;
-    setTimeout(() => {}, randomDelay);
-
-    return () => {
-      window.removeEventListener('keydown', keyHandler);
-    };
   }, [skillCheck]);
 
   useEffect(() => {

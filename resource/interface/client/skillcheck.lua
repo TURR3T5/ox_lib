@@ -43,13 +43,23 @@ function lib.skillCheckActive()
     return skillcheck ~= nil
 end
 
-RegisterNUICallback('skillCheckOver', function(success, cb)
+RegisterNUICallback('skillCheckOver', function(data, cb)
     cb(1)
+
+    if data.percentage == nil then
+        if skillcheck then
+            lib.resetNuiFocus()
+
+            skillcheck:resolve(false)
+            skillcheck = nil
+        end
+        return
+    end
 
     if skillcheck then
         lib.resetNuiFocus()
 
-        skillcheck:resolve(success)
+        skillcheck:resolve(data.success)
         skillcheck = nil
     end
 end)
