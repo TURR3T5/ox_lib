@@ -1,6 +1,7 @@
-import { Box, Stack, Tooltip, FocusTrap } from '@mantine/core';
+import { Box, Stack, Tooltip } from '@mantine/core';
 import { createStyles } from '@mantine/emotion';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { FocusTrap } from 'focus-trap-react';
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
 import ListItem from './ListItem';
 import Header from './Header';

@@ -83,7 +83,7 @@ const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index,
       ref={(element: HTMLDivElement) => {
         if (ref && element) {
           // @ts-ignore i cba
-          ref.current = [...(ref.current || []), element];
+          ref.current = [...ref.current, element];
         }
       }}
     >
