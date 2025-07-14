@@ -1,53 +1,10 @@
 import React from 'react';
-import { Box, createStyles, Text } from '@mantine/core';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { fetchNui } from '../../utils/fetchNui';
-import ScaleFade from '../../transitions/ScaleFade';
 import type { ProgressbarProps } from '../../typings';
-
-const useStyles = createStyles((theme) => ({
-  container: {
-    width: 350,
-    height: 45,
-    borderRadius: theme.radius.sm,
-    backgroundColor: theme.colors.dark[5],
-    overflow: 'hidden',
-  },
-  wrapper: {
-    width: '100%',
-    height: '20%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    bottom: 0,
-    position: 'absolute',
-  },
-  bar: {
-    height: '100%',
-    backgroundColor: theme.colors[theme.primaryColor][theme.fn.primaryShade()],
-  },
-  labelWrapper: {
-    position: 'absolute',
-    display: 'flex',
-    width: 350,
-    height: 45,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  label: {
-    maxWidth: 350,
-    padding: 8,
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    fontSize: 20,
-    color: theme.colors.gray[3],
-    textShadow: theme.shadows.sm,
-  },
-}));
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Progressbar: React.FC = () => {
-  const { classes } = useStyles();
   const [visible, setVisible] = React.useState(false);
   const [label, setLabel] = React.useState('');
   const [duration, setDuration] = React.useState(0);
@@ -61,26 +18,39 @@ const Progressbar: React.FC = () => {
   });
 
   return (
-    <>
-      <Box className={classes.wrapper}>
-        <ScaleFade visible={visible} onExitComplete={() => fetchNui('progressComplete')}>
-          <Box className={classes.container}>
-            <Box
-              className={classes.bar}
-              onAnimationEnd={() => setVisible(false)}
-              sx={{
-                animation: 'progress-bar linear',
-                animationDuration: `${duration}ms`,
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          className="fixed bottom-20 left-1/2 -translate-x-1/2 w-[350px] h-[45px] z-50"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 50 }}
+          transition={{ duration: 0.2 }}
+        >
+          <div className="relative w-full h-full rounded-sm bg-muted overflow-hidden shadow-lg">
+            <motion.div
+              className="h-full bg-primary"
+              initial={{ width: '0%' }}
+              animate={{ width: '100%' }}
+              transition={{
+                duration: duration / 1000,
+                ease: 'linear',
               }}
-            >
-              <Box className={classes.labelWrapper}>
-                <Text className={classes.label}>{label}</Text>
-              </Box>
-            </Box>
-          </Box>
-        </ScaleFade>
-      </Box>
-    </>
+              onAnimationComplete={() => {
+                setVisible(false);
+                fetchNui('progressComplete');
+              }}
+            />
+
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-sm font-medium text-primary-foreground drop-shadow-sm max-w-full px-2 truncate">
+                {label}
+              </span>
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

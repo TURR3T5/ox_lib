@@ -1,10 +1,8 @@
-import { Button, Group, Modal, Stack } from '@mantine/core';
 import React from 'react';
 import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { useLocales } from '../../providers/LocaleProvider';
 import { fetchNui } from '../../utils/fetchNui';
-import type { InputProps } from '../../typings';
-import { OptionValue } from '../../typings';
+import type { InputProps, OptionValue } from '../../typings';
 import InputField from './components/fields/input';
 import CheckboxField from './components/fields/checkbox';
 import SelectField from './components/fields/select';
@@ -16,6 +14,8 @@ import DateField from './components/fields/date';
 import TextareaField from './components/fields/textarea';
 import TimeField from './components/fields/time';
 import dayjs from 'dayjs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
 export type FormValues = {
   test: {
@@ -41,26 +41,34 @@ const InputDialog: React.FC = () => {
     setFields(data);
     setVisible(true);
     data.rows.forEach((row, index) => {
-      fieldForm.insert(
-        index,
-        {
-          value:
-            row.type !== 'checkbox'
-              ? row.type === 'date' || row.type === 'date-range' || row.type === 'time'
-                ? // Set date to current one if default is set to true
-                  row.default === true
-                  ? new Date().getTime()
-                  : Array.isArray(row.default)
-                  ? row.default.map((date) => new Date(date).getTime())
-                  : row.default && new Date(row.default).getTime()
-                : row.default
-              : row.checked,
-        } || { value: null }
-      );
-      // Backwards compat with new Select data type
-      if (row.type === 'select' || row.type === 'multi-select') {
+      let value;
+
+      if (row.type === 'checkbox') {
+        value = row.checked;
+      } else if (row.type === 'date' || row.type === 'date-range' || row.type === 'time') {
+        if (row.default === true) {
+          value = new Date().getTime();
+        } else if (Array.isArray(row.default)) {
+          value = row.default.map((date) => new Date(date).getTime());
+        } else if (row.default) {
+          value = new Date(row.default).getTime();
+        } else {
+          value = null;
+        }
+      } else {
+        value = row.default;
+      }
+
+      fieldForm.insert(index, { value: value ?? null });
+
+      // Fix the options mapping
+      if ((row.type === 'select' || row.type === 'multi-select') && row.options) {
         row.options = row.options.map((option) =>
-          !option.label ? { ...option, label: option.value } : option
+          typeof option === 'string'
+            ? { value: option, label: option }
+            : option.label
+            ? option
+            : { ...option, label: option.value }
         ) as Array<OptionValue>;
       }
     });
@@ -82,10 +90,10 @@ const InputDialog: React.FC = () => {
     const values: any[] = [];
     for (let i = 0; i < fields.rows.length; i++) {
       const row = fields.rows[i];
-
       if ((row.type === 'date' || row.type === 'date-range') && row.returnString) {
-        if (!data.test[i]) continue;
-        data.test[i].value = dayjs(data.test[i].value).format(row.format || 'DD/MM/YYYY');
+        if (data.test[i]?.value) {
+          data.test[i].value = dayjs(data.test[i].value).format(row.format || 'DD/MM/YYYY');
+        }
       }
     }
     Object.values(data.test).forEach((obj: { value: any }) => values.push(obj.value));
@@ -96,23 +104,14 @@ const InputDialog: React.FC = () => {
   });
 
   return (
-    <>
-      <Modal
-        opened={visible}
-        onClose={handleClose}
-        centered
-        closeOnEscape={fields.options?.allowCancel !== false}
-        closeOnClickOutside={false}
-        size="xs"
-        styles={{ title: { textAlign: 'center', width: '100%', fontSize: 18 } }}
-        title={fields.heading}
-        withCloseButton={false}
-        overlayOpacity={0.5}
-        transition="fade"
-        exitTransitionDuration={150}
-      >
-        <form onSubmit={onSubmit}>
-          <Stack>
+    <Dialog open={visible} onOpenChange={() => handleClose()}>
+      <DialogContent className="max-w-sm">
+        <DialogHeader>
+          <DialogTitle className="text-center text-lg">{fields.heading}</DialogTitle>
+        </DialogHeader>
+
+        <form onSubmit={onSubmit} className="space-y-4">
+          <div className="space-y-4">
             {fieldForm.fields.map((item, index) => {
               const row = fields.rows[index];
               return (
@@ -138,9 +137,9 @@ const InputDialog: React.FC = () => {
                   {row.type === 'slider' && <SliderField control={form.control} row={row} index={index} />}
                   {row.type === 'color' && <ColorField control={form.control} row={row} index={index} />}
                   {row.type === 'time' && <TimeField control={form.control} row={row} index={index} />}
-                  {row.type === 'date' || row.type === 'date-range' ? (
+                  {(row.type === 'date' || row.type === 'date-range') && (
                     <DateField control={form.control} row={row} index={index} />
-                  ) : null}
+                  )}
                   {row.type === 'textarea' && (
                     <TextareaField
                       register={form.register(`test.${index}.value`, { required: row.required })}
@@ -151,24 +150,22 @@ const InputDialog: React.FC = () => {
                 </React.Fragment>
               );
             })}
-            <Group position="right" spacing={10}>
-              <Button
-                uppercase
-                variant="default"
-                onClick={() => handleClose()}
-                mr={3}
-                disabled={fields.options?.allowCancel === false}
-              >
-                {locale.ui.cancel}
-              </Button>
-              <Button uppercase variant="light" type="submit">
-                {locale.ui.confirm}
-              </Button>
-            </Group>
-          </Stack>
+          </div>
+
+          <div className="flex justify-end gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => handleClose()}
+              disabled={fields.options?.allowCancel === false}
+            >
+              {locale.ui.cancel}
+            </Button>
+            <Button type="submit">{locale.ui.confirm}</Button>
+          </div>
         </form>
-      </Modal>
-    </>
+      </DialogContent>
+    </Dialog>
   );
 };
 

@@ -1,61 +1,13 @@
-import { Box, createStyles } from '@mantine/core';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
 import { fetchNui } from '../../../utils/fetchNui';
 import { isIconUrl } from '../../../utils/isIconUrl';
-import ScaleFade from '../../../transitions/ScaleFade';
 import type { RadialMenuItem } from '../../../typings';
 import { useLocales } from '../../../providers/LocaleProvider';
 import LibIcon from '../../../components/LibIcon';
-
-const useStyles = createStyles((theme) => ({
-  wrapper: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-  },
-  sector: {
-    fill: theme.colors.dark[6],
-    color: theme.colors.dark[0],
-
-    '&:hover': {
-      fill: theme.fn.primaryColor(),
-      cursor: 'pointer',
-      '> g > text, > g > svg > path': {
-        fill: '#fff',
-      },
-    },
-    '> g > text': {
-      fill: theme.colors.dark[0],
-      strokeWidth: 0,
-    },
-  },
-  backgroundCircle: {
-    fill: theme.colors.dark[6],
-  },
-  centerCircle: {
-    fill: theme.fn.primaryColor(),
-    color: '#fff',
-    stroke: theme.colors.dark[6],
-    strokeWidth: 4,
-    '&:hover': {
-      cursor: 'pointer',
-      fill: theme.colors[theme.primaryColor][theme.fn.primaryShade() - 1],
-    },
-  },
-  centerIconContainer: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    pointerEvents: 'none',
-  },
-  centerIcon: {
-    color: '#fff',
-  },
-}));
+import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const calculateFontSize = (text: string): number => {
   if (text.length > 20) return 10;
@@ -81,11 +33,9 @@ const splitTextIntoLines = (text: string, maxCharPerLine: number = 15): string[]
 };
 
 const PAGE_ITEMS = 6;
-
 const degToRad = (deg: number) => deg * (Math.PI / 180);
 
 const RadialMenu: React.FC = () => {
-  const { classes } = useStyles();
   const { locale } = useLocales();
   const newDimension = 350 * 1.1025;
   const [visible, setVisible] = useState(false);
@@ -98,11 +48,8 @@ const RadialMenu: React.FC = () => {
 
   const changePage = async (increment?: boolean) => {
     setVisible(false);
-
     const didTransition: boolean = await fetchNui('radialTransition');
-
     if (!didTransition) return;
-
     setVisible(true);
     setMenu({ ...menu, page: increment ? menu.page + 1 : menu.page - 1 });
   };
@@ -135,27 +82,46 @@ const RadialMenu: React.FC = () => {
     setMenu({ ...menu, items: data });
   });
 
+  const handleContextMenu = async () => {
+    if (menu.page > 1) await changePage();
+    else if (menu.sub) fetchNui('radialBack');
+  };
+
+  const handleCenterClick = async () => {
+    if (menu.page > 1) await changePage();
+    else {
+      if (menu.sub) fetchNui('radialBack');
+      else {
+        setVisible(false);
+        fetchNui('radialClose');
+      }
+    }
+  };
+
   return (
-    <>
-      <Box
-        className={classes.wrapper}
-        onContextMenu={async () => {
-          if (menu.page > 1) await changePage();
-          else if (menu.sub) fetchNui('radialBack');
-        }}
-      >
-        <ScaleFade visible={visible}>
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          transition={{ duration: 0.2 }}
+          onContextMenu={handleContextMenu}
+        >
           <svg
             style={{ overflow: 'visible' }}
             width={`${newDimension}px`}
             height={`${newDimension}px`}
             viewBox="0 0 350 350"
             transform="rotate(90)"
+            className="drop-shadow-lg"
           >
-            {/* Fixed issues with background circle extending the circle when there's less than 3 items */}
+            {/* Background circle */}
             <g transform="translate(175, 175)">
-              <circle r={175} className={classes.backgroundCircle} />
+              <circle r={175} className="fill-background/90 stroke-border stroke-2" />
             </g>
+
             {menuItems.map((item, index) => {
               const pieAngle = 360 / (menuItems.length < 3 ? 3 : menuItems.length);
               const angle = degToRad(pieAngle / 2 + 90);
@@ -165,20 +131,19 @@ const RadialMenu: React.FC = () => {
               const cosAngle = Math.cos(angle);
               const iconYOffset = splitTextIntoLines(item.label, 15).length > 3 ? 3 : 0;
               const iconX = 175 + sinAngle * radius;
-              const iconY = 175 + cosAngle * radius + iconYOffset; // Apply the Y offset to iconY
+              const iconY = 175 + cosAngle * radius + iconYOffset;
               const iconWidth = Math.min(Math.max(item.iconWidth || 50, 0), 100);
               const iconHeight = Math.min(Math.max(item.iconHeight || 50, 0), 100);
 
               return (
                 <g
+                  key={`radial-item-${index}`}
                   transform={`rotate(-${index * pieAngle} 175 175) translate(${sinAngle * gap}, ${cosAngle * gap})`}
-                  className={classes.sector}
+                  className="fill-muted hover:fill-primary cursor-pointer transition-colors group"
                   onClick={async () => {
                     const clickIndex = menu.page === 1 ? index : PAGE_ITEMS * (menu.page - 1) - (menu.page - 1) + index;
                     if (!item.isMore) fetchNui('radialClick', clickIndex);
-                    else {
-                      await changePage(true);
-                    }
+                    else await changePage(true);
                   }}
                 >
                   <path
@@ -186,7 +151,8 @@ const RadialMenu: React.FC = () => {
                       175 + (175 - gap) * Math.cos(-degToRad(pieAngle))
                     }, ${175 + (175 - gap) * Math.sin(-degToRad(pieAngle))} z`}
                   />
-                  <g transform={`rotate(${index * pieAngle - 90} ${iconX} ${iconY})`} pointerEvents="none">
+
+                  <g transform={`rotate(${index * pieAngle - 90} ${iconX} ${iconY})`} className="pointer-events-none">
                     {typeof item.icon === 'string' && isIconUrl(item.icon) ? (
                       <image
                         href={item.icon}
@@ -203,15 +169,17 @@ const RadialMenu: React.FC = () => {
                         width={30}
                         height={30}
                         fixedWidth
+                        className="fill-foreground group-hover:fill-primary-foreground"
                       />
                     )}
+
                     <text
                       x={iconX}
                       y={iconY + (splitTextIntoLines(item.label, 15).length > 2 ? 15 : 28)}
-                      fill="#fff"
+                      fill="currentColor"
                       textAnchor="middle"
                       fontSize={calculateFontSize(item.label)}
-                      pointerEvents="none"
+                      className="pointer-events-none fill-foreground group-hover:fill-primary-foreground"
                       lengthAdjust="spacingAndGlyphs"
                     >
                       {splitTextIntoLines(item.label, 15).map((line, index) => (
@@ -224,34 +192,27 @@ const RadialMenu: React.FC = () => {
                 </g>
               );
             })}
-            <g
-              transform={`translate(175, 175)`}
-              onClick={async () => {
-                if (menu.page > 1) await changePage();
-                else {
-                  if (menu.sub) fetchNui('radialBack');
-                  else {
-                    setVisible(false);
-                    fetchNui('radialClose');
-                  }
-                }
-              }}
-            >
-              <circle r={28} className={classes.centerCircle} />
+
+            {/* Center circle */}
+            <g transform="translate(175, 175)" onClick={handleCenterClick}>
+              <circle
+                r={28}
+                className="fill-primary hover:fill-primary/90 stroke-background stroke-4 cursor-pointer transition-colors"
+              />
             </g>
           </svg>
-          <div className={classes.centerIconContainer}>
+
+          {/* Center icon */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
             <LibIcon
               icon={!menu.sub && menu.page < 2 ? 'xmark' : 'arrow-rotate-left'}
               fixedWidth
-              className={classes.centerIcon}
-              color="#fff"
-              size="2x"
+              className="w-8 h-8 text-primary-foreground"
             />
           </div>
-        </ScaleFade>
-      </Box>
-    </>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

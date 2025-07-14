@@ -1,32 +1,11 @@
-import { Box, createStyles, Text } from '@mantine/core';
 import React from 'react';
-
-const useStyles = createStyles((theme) => ({
-  container: {
-    textAlign: 'center',
-    borderTopLeftRadius: theme.radius.md,
-    borderTopRightRadius: theme.radius.md,
-    backgroundColor: theme.colors.dark[6],
-    height: 60,
-    width: 384,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  heading: {
-    fontSize: 24,
-    textTransform: 'uppercase',
-    fontWeight: 500,
-  },
-}));
+import { cn } from '@/lib/utils';
 
 const Header: React.FC<{ title: string }> = ({ title }) => {
-  const { classes } = useStyles();
-
   return (
-    <Box className={classes.container}>
-      <Text className={classes.heading}>{title}</Text>
-    </Box>
+    <div className="bg-background border border-border rounded-t-md h-15 flex items-center justify-center">
+      <h2 className="text-lg font-medium uppercase tracking-wide">{title}</h2>
+    </div>
   );
 };
 

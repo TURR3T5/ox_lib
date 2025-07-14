@@ -1,6 +1,8 @@
-import { Button, createStyles } from '@mantine/core';
+import React from 'react';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import LibIcon from '../../../../components/LibIcon';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface Props {
   icon: IconProp;
@@ -9,36 +11,20 @@ interface Props {
   handleClick: () => void;
 }
 
-const useStyles = createStyles((theme, params: { canClose?: boolean }) => ({
-  button: {
-    borderRadius: 4,
-    flex: '1 15%',
-    alignSelf: 'stretch',
-    height: 'auto',
-    textAlign: 'center',
-    justifyContent: 'center',
-    padding: 2,
-  },
-  root: {
-    border: 'none',
-  },
-  label: {
-    color: params.canClose === false ? theme.colors.dark[2] : theme.colors.dark[0],
-  },
-}));
-
 const HeaderButton: React.FC<Props> = ({ icon, canClose, iconSize, handleClick }) => {
-  const { classes } = useStyles({ canClose });
-
   return (
     <Button
-      variant="default"
-      className={classes.button}
-      classNames={{ label: classes.label, root: classes.root }}
+      variant="outline"
+      size="sm"
+      className={cn('flex-shrink-0 h-10 w-10 p-0', canClose === false && 'opacity-50 cursor-not-allowed')}
       disabled={canClose === false}
       onClick={handleClick}
     >
-      <LibIcon icon={icon} fontSize={iconSize} fixedWidth />
+      <LibIcon
+        icon={icon}
+        className={cn('w-4 h-4', canClose === false ? 'text-muted-foreground' : 'text-foreground')}
+        fixedWidth
+      />
     </Button>
   );
 };

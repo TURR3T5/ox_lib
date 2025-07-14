@@ -1,8 +1,11 @@
+import React from 'react';
 import { IDateInput } from '../../../../typings/dialog';
 import { Control, useController } from 'react-hook-form';
 import { FormValues } from '../../InputDialog';
-import { DatePicker, DateRangePicker } from '@mantine/dates';
 import LibIcon from '../../../../components/LibIcon';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
 
 interface Props {
   row: IDateInput;
@@ -10,63 +13,55 @@ interface Props {
   control: Control<FormValues>;
 }
 
-const DateField: React.FC<Props> = (props) => {
+const DateField: React.FC<Props> = ({ row, index, control }) => {
   const controller = useController({
-    name: `test.${props.index}.value`,
-    control: props.control,
-    rules: { required: props.row.required, min: props.row.min, max: props.row.max },
+    name: `test.${index}.value`,
+    control,
+    rules: { required: row.required, min: row.min, max: row.max },
   });
 
+  const formatDateForInput = (timestamp: number) => {
+    if (!timestamp) return '';
+    const date = new Date(timestamp);
+    return date.toISOString().split('T')[0];
+  };
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const date = new Date(e.target.value);
+    controller.field.onChange(date.getTime());
+  };
+
   return (
-    <>
-      {props.row.type === 'date' && (
-        <DatePicker
-          value={controller.field.value ? new Date(controller.field.value) : controller.field.value}
-          name={controller.field.name}
-          ref={controller.field.ref}
+    <div className="space-y-2">
+      <Label
+        htmlFor={`date-${index}`}
+        className={cn(row.required && "after:content-['*'] after:ml-0.5 after:text-red-500")}
+      >
+        {row.label}
+      </Label>
+
+      {row.description && <p className="text-sm text-muted-foreground">{row.description}</p>}
+
+      <div className="relative">
+        {row.icon && (
+          <div className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground flex items-center justify-center">
+            <LibIcon icon={row.icon} fixedWidth />
+          </div>
+        )}
+
+        <Input
+          id={`date-${index}`}
+          type={row.type === 'date-range' ? 'date' : 'date'}
+          value={formatDateForInput(controller.field.value)}
+          onChange={handleDateChange}
           onBlur={controller.field.onBlur}
-          // Workaround to use timestamp instead of Date object in values
-          onChange={(date) => controller.field.onChange(date ? date.getTime() : null)}
-          label={props.row.label}
-          description={props.row.description}
-          placeholder={props.row.format}
-          disabled={props.row.disabled}
-          inputFormat={props.row.format}
-          withAsterisk={props.row.required}
-          clearable={props.row.clearable}
-          icon={props.row.icon && <LibIcon fixedWidth icon={props.row.icon} />}
-          minDate={props.row.min ? new Date(props.row.min) : undefined}
-          maxDate={props.row.max ? new Date(props.row.max) : undefined}
+          disabled={row.disabled}
+          min={row.min ? formatDateForInput(new Date(row.min).getTime()) : undefined}
+          max={row.max ? formatDateForInput(new Date(row.max).getTime()) : undefined}
+          className={cn(row.icon && 'pl-10')}
         />
-      )}
-      {props.row.type === 'date-range' && (
-        <DateRangePicker
-          value={
-            controller.field.value
-              ? controller.field.value[0]
-                ? controller.field.value.map((date: Date) => new Date(date))
-                : controller.field.value
-              : controller.field.value
-          }
-          name={controller.field.name}
-          ref={controller.field.ref}
-          onBlur={controller.field.onBlur}
-          onChange={(dates) =>
-            controller.field.onChange(dates.map((date: Date | null) => (date ? date.getTime() : null)))
-          }
-          label={props.row.label}
-          description={props.row.description}
-          placeholder={props.row.format}
-          disabled={props.row.disabled}
-          inputFormat={props.row.format}
-          withAsterisk={props.row.required}
-          clearable={props.row.clearable}
-          icon={props.row.icon && <LibIcon fixedWidth icon={props.row.icon} />}
-          minDate={props.row.min ? new Date(props.row.min) : undefined}
-          maxDate={props.row.max ? new Date(props.row.max) : undefined}
-        />
-      )}
-    </>
+      </div>
+    </div>
   );
 };
 

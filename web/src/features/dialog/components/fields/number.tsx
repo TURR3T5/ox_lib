@@ -1,8 +1,11 @@
-import { NumberInput } from '@mantine/core';
+import React from 'react';
 import { INumber } from '../../../../typings/dialog';
 import { Control, useController } from 'react-hook-form';
 import { FormValues } from '../../InputDialog';
 import LibIcon from '../../../../components/LibIcon';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
 
 interface Props {
   row: INumber;
@@ -10,32 +13,46 @@ interface Props {
   control: Control<FormValues>;
 }
 
-const NumberField: React.FC<Props> = (props) => {
+const NumberField: React.FC<Props> = ({ row, index, control }) => {
   const controller = useController({
-    name: `test.${props.index}.value`,
-    control: props.control,
-    defaultValue: props.row.default,
-    rules: { required: props.row.required, min: props.row.min, max: props.row.max },
+    name: `test.${index}.value`,
+    control,
+    defaultValue: row.default,
+    rules: { required: row.required, min: row.min, max: row.max },
   });
 
   return (
-    <NumberInput
-      value={controller.field.value}
-      name={controller.field.name}
-      ref={controller.field.ref}
-      onBlur={controller.field.onBlur}
-      onChange={controller.field.onChange}
-      label={props.row.label}
-      description={props.row.description}
-      defaultValue={props.row.default}
-      min={props.row.min}
-      max={props.row.max}
-      step={props.row.step}
-      precision={props.row.precision}
-      disabled={props.row.disabled}
-      icon={props.row.icon && <LibIcon icon={props.row.icon} fixedWidth />}
-      withAsterisk={props.row.required}
-    />
+    <div className="space-y-2">
+      <Label
+        htmlFor={`number-${index}`}
+        className={cn(row.required && "after:content-['*'] after:ml-0.5 after:text-red-500")}
+      >
+        {row.label}
+      </Label>
+
+      {row.description && <p className="text-sm text-muted-foreground">{row.description}</p>}
+
+      <div className="relative">
+        {row.icon && (
+          <div className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground flex items-center justify-center">
+            <LibIcon icon={row.icon} fixedWidth />
+          </div>
+        )}
+
+        <Input
+          id={`number-${index}`}
+          type="number"
+          value={controller.field.value || ''}
+          onChange={(e) => controller.field.onChange(parseFloat(e.target.value) || null)}
+          onBlur={controller.field.onBlur}
+          disabled={row.disabled}
+          min={row.min}
+          max={row.max}
+          step={row.step}
+          className={cn(row.icon && 'pl-10')}
+        />
+      </div>
+    </div>
   );
 };
 

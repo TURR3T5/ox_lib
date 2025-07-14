@@ -1,140 +1,78 @@
-import { Box, createStyles, Group, Progress, Stack, Text } from '@mantine/core';
 import React, { forwardRef } from 'react';
 import CustomCheckbox from './CustomCheckbox';
 import type { MenuItem } from '../../../typings';
 import { isIconUrl } from '../../../utils/isIconUrl';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import LibIcon from '../../../components/LibIcon';
+import { cn } from '@/lib/utils';
+import { Progress } from '@/components/ui/progress';
 
 interface Props {
   item: MenuItem;
   index: number;
   scrollIndex: number;
   checked: boolean;
+  isSelected: boolean;
 }
 
-const useStyles = createStyles((theme, params: { iconColor?: string }) => ({
-  buttonContainer: {
-    backgroundColor: theme.colors.dark[6],
-    borderRadius: theme.radius.md,
-    padding: 2,
-    height: 60,
-    scrollMargin: 8,
-    '&:focus': {
-      backgroundColor: theme.colors.dark[4],
-      outline: 'none',
-    },
-  },
-  iconImage: {
-    maxWidth: 32,
-  },
-  buttonWrapper: {
-    paddingLeft: 5,
-    paddingRight: 12,
-    height: '100%',
-  },
-  iconContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    width: 32,
-    height: 32,
-  },
-  icon: {
-    fontSize: 24,
-    color: params.iconColor || theme.colors.dark[2],
-  },
-  label: {
-    color: theme.colors.dark[2],
-    textTransform: 'uppercase',
-    fontSize: 12,
-    verticalAlign: 'middle',
-  },
-  chevronIcon: {
-    fontSize: 14,
-    color: theme.colors.dark[2],
-  },
-  scrollIndexValue: {
-    color: theme.colors.dark[2],
-    textTransform: 'uppercase',
-    fontSize: 14,
-  },
-  progressStack: {
-    width: '100%',
-    marginRight: 5,
-  },
-  progressLabel: {
-    verticalAlign: 'middle',
-    marginBottom: 3,
-  },
-}));
-
-const ListItem = forwardRef<Array<HTMLDivElement | null>, Props>(({ item, index, scrollIndex, checked }, ref) => {
-  const { classes } = useStyles({ iconColor: item.iconColor });
-
+const ListItem = forwardRef<HTMLDivElement, Props>(({ item, index, scrollIndex, checked, isSelected }, ref) => {
   return (
-    <Box
+    <div
       tabIndex={index}
-      className={classes.buttonContainer}
+      className={cn('bg-muted rounded-md p-2 h-15 transition-colors focus:outline-none', isSelected && 'bg-accent')}
       key={`item-${index}`}
-      ref={(element: HTMLDivElement) => {
-        if (ref)
-          // @ts-ignore i cba
-          return (ref.current = [...ref.current, element]);
-      }}
+      ref={ref}
     >
-      <Group spacing={15} noWrap className={classes.buttonWrapper}>
+      <div className="flex items-center gap-4 h-full px-1">
         {item.icon && (
-          <Box className={classes.iconContainer}>
+          <div className="flex items-center justify-center w-8 h-8 flex-shrink-0">
             {typeof item.icon === 'string' && isIconUrl(item.icon) ? (
-              <img src={item.icon} alt="Missing image" className={classes.iconImage} />
+              <img src={item.icon} alt="icon" className="w-8 h-8 object-contain" />
             ) : (
               <LibIcon
                 icon={item.icon as IconProp}
-                className={classes.icon}
+                className={cn('w-6 h-6')}
+                style={{ color: item.iconColor }}
                 fixedWidth
                 animation={item.iconAnimation}
               />
             )}
-          </Box>
+          </div>
         )}
+
         {Array.isArray(item.values) ? (
-          <Group position="apart" w="100%">
-            <Stack spacing={0} justify="space-between">
-              <Text className={classes.label}>{item.label}</Text>
-              <Text>
+          <div className="flex items-center justify-between w-full min-w-0">
+            <div className="flex flex-col min-w-0">
+              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{item.label}</span>
+              <span className="text-sm truncate">
                 {typeof item.values[scrollIndex] === 'object'
-                  ? // @ts-ignore for some reason even checking the type TS still thinks it's a string
-                    item.values[scrollIndex].label
+                  ? (item.values[scrollIndex] as any).label
                   : item.values[scrollIndex]}
-              </Text>
-            </Stack>
-            <Group spacing={1} position="center">
-              <LibIcon icon="chevron-left" className={classes.chevronIcon} />
-              <Text className={classes.scrollIndexValue}>
+              </span>
+            </div>
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <LibIcon icon="chevron-left" className="w-3 h-3" />
+              <span>
                 {scrollIndex + 1}/{item.values.length}
-              </Text>
-              <LibIcon icon="chevron-right" className={classes.chevronIcon} />
-            </Group>
-          </Group>
+              </span>
+              <LibIcon icon="chevron-right" className="w-3 h-3" />
+            </div>
+          </div>
         ) : item.checked !== undefined ? (
-          <Group position="apart" w="100%">
-            <Text>{item.label}</Text>
-            <CustomCheckbox checked={checked}></CustomCheckbox>
-          </Group>
+          <div className="flex items-center justify-between w-full">
+            <span className="text-sm">{item.label}</span>
+            <CustomCheckbox checked={checked} />
+          </div>
         ) : item.progress !== undefined ? (
-          <Stack className={classes.progressStack} spacing={0}>
-            <Text className={classes.progressLabel}>{item.label}</Text>
-            <Progress
-              value={item.progress}
-              color={item.colorScheme || 'dark.0'}
-              styles={(theme) => ({ root: { backgroundColor: theme.colors.dark[3] } })}
-            />
-          </Stack>
+          <div className="flex flex-col w-full gap-1">
+            <span className="text-sm font-medium">{item.label}</span>
+            <Progress value={item.progress} className="h-2" />
+          </div>
         ) : (
-          <Text>{item.label}</Text>
+          <span className="text-sm">{item.label}</span>
         )}
-      </Group>
-    </Box>
+      </div>
+    </div>
   );
 });
 

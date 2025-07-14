@@ -1,55 +1,12 @@
-import { Box, createStyles, Stack, Tooltip } from '@mantine/core';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNuiEvent } from '../../../hooks/useNuiEvent';
 import ListItem from './ListItem';
 import Header from './Header';
-import FocusTrap from 'focus-trap-react';
 import { fetchNui } from '../../../utils/fetchNui';
 import type { MenuPosition, MenuSettings } from '../../../typings';
 import LibIcon from '../../../components/LibIcon';
-
-const useStyles = createStyles((theme, params: { position?: MenuPosition; itemCount: number; selected: number }) => ({
-  tooltip: {
-    backgroundColor: theme.colors.dark[6],
-    color: theme.colors.dark[2],
-    borderRadius: theme.radius.sm,
-    maxWidth: 350,
-    whiteSpace: 'normal',
-  },
-  container: {
-    position: 'absolute',
-    pointerEvents: 'none',
-    marginTop: params.position === 'top-left' || params.position === 'top-right' ? 5 : 0,
-    marginLeft: params.position === 'top-left' || params.position === 'bottom-left' ? 5 : 0,
-    marginRight: params.position === 'top-right' || params.position === 'bottom-right' ? 5 : 0,
-    marginBottom: params.position === 'bottom-left' || params.position === 'bottom-right' ? 5 : 0,
-    right: params.position === 'top-right' || params.position === 'bottom-right' ? 1 : undefined,
-    left: params.position === 'bottom-left' ? 1 : undefined,
-    bottom: params.position === 'bottom-left' || params.position === 'bottom-right' ? 1 : undefined,
-    fontFamily: 'Roboto',
-    width: 384,
-  },
-  buttonsWrapper: {
-    height: 'fit-content',
-    maxHeight: 415,
-    overflow: 'hidden',
-    borderRadius: params.itemCount <= 6 || params.selected === params.itemCount - 1 ? theme.radius.md : undefined,
-    backgroundColor: theme.colors.dark[8],
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
-  },
-  scrollArrow: {
-    backgroundColor: theme.colors.dark[8],
-    textAlign: 'center',
-    borderBottomLeftRadius: theme.radius.md,
-    borderBottomRightRadius: theme.radius.md,
-    height: 25,
-  },
-  scrollArrowIcon: {
-    color: theme.colors.dark[2],
-    fontSize: 20,
-  },
-}));
+import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const ListMenu: React.FC = () => {
   const [menu, setMenu] = useState<MenuSettings>({
@@ -63,7 +20,20 @@ const ListMenu: React.FC = () => {
   const [checkedStates, setCheckedStates] = useState<Record<number, boolean>>({});
   const listRefs = useRef<Array<HTMLDivElement | null>>([]);
   const firstRenderRef = useRef(false);
-  const { classes } = useStyles({ position: menu.position, itemCount: menu.items.length, selected });
+
+  const getPositionClasses = (position?: MenuPosition) => {
+    switch (position) {
+      case 'top-right':
+        return 'top-5 right-5';
+      case 'bottom-left':
+        return 'bottom-5 left-5';
+      case 'bottom-right':
+        return 'bottom-5 right-5';
+      case 'top-left':
+      default:
+        return 'top-5 left-5';
+    }
+  };
 
   const closeMenu = (ignoreFetch?: boolean, keyPressed?: string, forceClose?: boolean) => {
     if (menu.canClose === false && !forceClose) return;
@@ -76,13 +46,13 @@ const ListMenu: React.FC = () => {
     switch (e.code) {
       case 'ArrowDown':
         setSelected((selected) => {
-          if (selected >= menu.items.length - 1) return (selected = 0);
+          if (selected >= menu.items.length - 1) return 0;
           return selected + 1;
         });
         break;
       case 'ArrowUp':
         setSelected((selected) => {
-          if (selected <= 0) return (selected = menu.items.length - 1);
+          if (selected <= 0) return menu.items.length - 1;
           return selected - 1;
         });
         break;
@@ -101,7 +71,6 @@ const ListMenu: React.FC = () => {
             [selected]:
               indexStates[selected] - 1 >= 0 ? indexStates[selected] - 1 : menu.items[selected].values?.length! - 1,
           });
-
         break;
       case 'Enter':
         if (!menu.items[selected]) return;
@@ -140,7 +109,7 @@ const ListMenu: React.FC = () => {
       inline: 'start',
     });
     listRefs.current[selected]?.focus({ preventScroll: true });
-    // debounces the callback to avoid spam
+
     const timer = setTimeout(() => {
       fetchNui('changeSelected', [
         selected,
@@ -163,7 +132,6 @@ const ListMenu: React.FC = () => {
     };
 
     window.addEventListener('keydown', keyHandler);
-
     return () => window.removeEventListener('keydown', keyHandler);
   }, [visible]);
 
@@ -185,6 +153,7 @@ const ListMenu: React.FC = () => {
     listRefs.current = [];
     setMenu(data);
     setVisible(true);
+
     const arrayIndexes: { [key: number]: number } = {};
     const checkedIndexes: { [key: number]: boolean } = {};
     for (let i = 0; i < data.items.length; i++) {
@@ -197,54 +166,80 @@ const ListMenu: React.FC = () => {
   });
 
   return (
-    <>
+    <AnimatePresence>
       {visible && (
-        <Tooltip
-          label={
-            isValuesObject(menu.items[selected].values)
-              ? // @ts-ignore
-                menu.items[selected].values[indexStates[selected]].description
-              : menu.items[selected].description
-          }
-          opened={
-            isValuesObject(menu.items[selected].values)
-              ? // @ts-ignore
-                !!menu.items[selected].values[indexStates[selected]].description
-              : !!menu.items[selected].description
-          }
-          transitionDuration={0}
-          classNames={{ tooltip: classes.tooltip }}
+        <motion.div
+          className={cn('fixed z-50 w-96', getPositionClasses(menu.position))}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.15 }}
         >
-          <Box className={classes.container}>
-            <Header title={menu.title} />
-            <Box className={classes.buttonsWrapper} onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => moveMenu(e)}>
-              <FocusTrap active={visible}>
-                <Stack spacing={8} p={8} sx={{ overflowY: 'scroll' }}>
-                  {menu.items.map((item, index) => (
-                    <React.Fragment key={`menu-item-${index}`}>
-                      {item.label && (
-                        <ListItem
-                          index={index}
-                          item={item}
-                          scrollIndex={indexStates[index]}
-                          checked={checkedStates[index]}
-                          ref={listRefs}
-                        />
-                      )}
-                    </React.Fragment>
-                  ))}
-                </Stack>
-              </FocusTrap>
-            </Box>
-            {menu.items.length > 6 && selected !== menu.items.length - 1 && (
-              <Box className={classes.scrollArrow}>
-                <LibIcon icon="chevron-down" className={classes.scrollArrowIcon} />
-              </Box>
+          <div className="relative">
+            {/* Tooltip */}
+            {(isValuesObject(menu.items[selected].values)
+              ? (menu.items[selected].values as any)[indexStates[selected]]?.description
+              : menu.items[selected].description) && (
+              <motion.div
+                className="absolute -top-2 left-0 right-0 transform -translate-y-full z-10"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+              >
+                <div className="bg-popover border border-border rounded-md p-3 text-sm shadow-lg max-w-sm break-words">
+                  {isValuesObject(menu.items[selected].values)
+                    ? (menu.items[selected].values as any)[indexStates[selected]].description
+                    : menu.items[selected].description}
+                </div>
+              </motion.div>
             )}
-          </Box>
-        </Tooltip>
+
+            <Header title={menu.title} />
+
+            <div
+              className={cn(
+                'bg-background border-x border-b border-border overflow-hidden',
+                'max-h-[415px]',
+                menu.items.length <= 6 || selected === menu.items.length - 1 ? 'rounded-b-md' : ''
+              )}
+              onKeyDown={moveMenu}
+              tabIndex={0}
+            >
+              <div className="overflow-y-auto p-2 space-y-2">
+                {menu.items.map((item, index) => (
+                  <React.Fragment key={`menu-item-${index}`}>
+                    {item.label && (
+                      <ListItem
+                        index={index}
+                        item={item}
+                        scrollIndex={indexStates[index]}
+                        checked={checkedStates[index]}
+                        ref={(el) => {
+                          if (listRefs.current) {
+                            listRefs.current[index] = el;
+                          }
+                        }}
+                        isSelected={selected === index}
+                      />
+                    )}
+                  </React.Fragment>
+                ))}
+              </div>
+            </div>
+
+            {menu.items.length > 6 && selected !== menu.items.length - 1 && (
+              <motion.div
+                className="bg-background border-x border-b border-border rounded-b-md h-6 flex items-center justify-center"
+                animate={{ y: [0, 2, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              >
+                <LibIcon icon="chevron-down" className="w-4 h-4 text-muted-foreground" />
+              </motion.div>
+            )}
+          </div>
+        </motion.div>
       )}
-    </>
+    </AnimatePresence>
   );
 };
 

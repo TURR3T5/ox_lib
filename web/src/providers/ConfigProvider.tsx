@@ -1,10 +1,9 @@
 import { Context, createContext, useContext, useEffect, useState } from 'react';
-import { MantineColor } from '@mantine/core';
 import { fetchNui } from '../utils/fetchNui';
 
 interface Config {
-  primaryColor: MantineColor;
-  primaryShade: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  primaryColor: string;
+  primaryShade: number;
 }
 
 interface ConfigCtxValue {

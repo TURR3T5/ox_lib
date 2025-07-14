@@ -1,5 +1,5 @@
-import type { Sx } from '@mantine/core';
 import type { IconName, IconPrefix } from '@fortawesome/fontawesome-common-types';
+import React from 'react';
 
 type NotificationPosition =
   | 'top'
@@ -21,7 +21,7 @@ interface NotifyProps {
   showDuration?: boolean;
   position?: NotificationPosition;
   type?: NotificationType;
-  style?: Sx;
+  style?: React.CSSProperties;
   icon?: IconName | [IconPrefix, IconName];
   iconColor?: string;
   iconAnimation?: IconAnimation;
@@ -31,7 +31,6 @@ interface NotifyProps {
 
 export const notify = (data: NotifyProps): void => exports.ox_lib.notify(data);
 
-// Keep for backwards compat with v2
 interface DefaultNotifyProps {
   title?: string;
   description?: string;

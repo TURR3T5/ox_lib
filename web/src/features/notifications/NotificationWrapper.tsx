@@ -1,99 +1,20 @@
 import { useNuiEvent } from '../../hooks/useNuiEvent';
-import { toast, Toaster } from 'react-hot-toast';
+import { toast, Toaster } from 'sonner';
 import ReactMarkdown from 'react-markdown';
-import { Box, Center, createStyles, Group, keyframes, RingProgress, Stack, Text, ThemeIcon } from '@mantine/core';
-import React, { useState } from 'react';
-import tinycolor from 'tinycolor2';
+import React from 'react';
 import type { NotificationProps } from '../../typings';
 import MarkdownComponents from '../../config/MarkdownComponents';
 import LibIcon from '../../components/LibIcon';
-
-const useStyles = createStyles((theme) => ({
-  container: {
-    width: 300,
-    height: 'fit-content',
-    backgroundColor: theme.colors.dark[6],
-    color: theme.colors.dark[0],
-    padding: 12,
-    borderRadius: theme.radius.sm,
-    fontFamily: 'Roboto',
-    boxShadow: theme.shadows.sm,
-  },
-  title: {
-    fontWeight: 500,
-    lineHeight: 'normal',
-  },
-  description: {
-    fontSize: 12,
-    color: theme.colors.dark[2],
-    fontFamily: 'Roboto',
-    lineHeight: 'normal',
-  },
-  descriptionOnly: {
-    fontSize: 14,
-    color: theme.colors.dark[2],
-    fontFamily: 'Roboto',
-    lineHeight: 'normal',
-  },
-}));
-
-const createAnimation = (from: string, to: string, visible: boolean) => keyframes({
-  from: {
-    opacity: visible ? 0 : 1,
-    transform: `translate${from}`,
-  },
-  to: {
-    opacity: visible ? 1 : 0,
-    transform: `translate${to}`,
-  },
-});
-
-const getAnimation = (visible: boolean, position: string) => {
-  const animationOptions = visible ? '0.2s ease-out forwards' : '0.4s ease-in forwards'
-  let animation: { from: string; to: string };
-
-  if (visible) {
-    animation = position.includes('bottom') ? { from: 'Y(30px)', to: 'Y(0px)' } : { from: 'Y(-30px)', to:'Y(0px)' };
-  } else {
-    if (position.includes('right')) {
-      animation = { from: 'X(0px)', to: 'X(100%)' }
-    } else if (position.includes('left')) {
-      animation = { from: 'X(0px)', to: 'X(-100%)' };
-    } else if (position === 'top-center') {
-      animation = { from: 'Y(0px)', to: 'Y(-100%)' };
-    } else if (position === 'bottom') {
-      animation = { from: 'Y(0px)', to: 'Y(100%)' };
-    } else {
-      animation = { from: 'X(0px)', to: 'X(100%)' };
-    }
-  }
-
-  return `${createAnimation(animation.from, animation.to, visible)} ${animationOptions}`
-};
-
-const durationCircle = keyframes({
-  '0%': { strokeDasharray: `0, ${15.1 * 2 * Math.PI}` },
-  '100%': { strokeDasharray: `${15.1 * 2 * Math.PI}, 0` },
-});
+import { cn } from '@/lib/utils';
 
 const Notifications: React.FC = () => {
-  const { classes } = useStyles();
-  const [toastKey, setToastKey] = useState(0);
-
   useNuiEvent<NotificationProps>('notify', (data) => {
     if (!data.title && !data.description) return;
 
-    const toastId = data.id?.toString();
     const duration = data.duration || 3000;
-
-    let iconColor: string;
     let position = data.position || 'top-right';
 
-    data.showDuration = data.showDuration !== undefined ? data.showDuration : true;
-
-    if (toastId) setToastKey(prevKey => prevKey + 1);
-
-    // Backwards compat with old notifications
+    // Backwards compat
     switch (position) {
       case 'top':
         position = 'top-center';
@@ -103,6 +24,7 @@ const Notifications: React.FC = () => {
         break;
     }
 
+    // Auto-assign icons based on type
     if (!data.icon) {
       switch (data.type) {
         case 'error':
@@ -120,102 +42,68 @@ const Notifications: React.FC = () => {
       }
     }
 
-    if (!data.iconColor) {
-      switch (data.type) {
-        case 'error':
-          iconColor = 'red.6';
-          break;
-        case 'success':
-          iconColor = 'teal.6';
-          break;
-        case 'warning':
-          iconColor = 'yellow.6';
-          break;
-        default:
-          iconColor = 'blue.6';
-          break;
-      }
-    } else {
-      iconColor = tinycolor(data.iconColor).toRgbString();
-    }
+    const iconColor =
+      data.iconColor ||
+      (() => {
+        switch (data.type) {
+          case 'error':
+            return 'text-red-500';
+          case 'success':
+            return 'text-green-500';
+          case 'warning':
+            return 'text-yellow-500';
+          default:
+            return 'text-blue-500';
+        }
+      })();
+
+    const content = (
+      <div className="flex items-start gap-3 min-w-0">
+        {data.icon && (
+          <div className={cn('flex-shrink-0 mt-0.5', iconColor)}>
+            <LibIcon icon={data.icon} fixedWidth animation={data.iconAnimation} className="w-4 h-4" />
+          </div>
+        )}
+        <div className="min-w-0 flex-1">
+          {data.title && <div className="font-medium text-sm leading-tight">{data.title}</div>}
+          {data.description && (
+            <div className={cn('text-xs text-muted-foreground leading-tight', !data.title && 'text-sm')}>
+              <ReactMarkdown components={MarkdownComponents}>{data.description}</ReactMarkdown>
+            </div>
+          )}
+        </div>
+      </div>
+    );
 
     toast.custom(
       (t) => (
-        <Box
-          sx={{
-            animation: getAnimation(t.visible, position),
-            ...data.style,
-          }}
-          className={`${classes.container}`}
+        <div
+          className={cn(
+            'bg-background border border-border rounded-lg shadow-lg p-3 w-80',
+            'animate-in slide-in-from-top-2 duration-200',
+            data.style as any
+          )}
         >
-          <Group noWrap spacing={12}>
-            {data.icon && (
-              <>
-                {data.showDuration ? (
-                  <RingProgress
-                    key={toastKey}
-                    size={38}
-                    thickness={2}
-                    sections={[{ value: 100, color: iconColor }]}
-                    style={{ alignSelf: !data.alignIcon || data.alignIcon === 'center' ? 'center' : 'start' }}
-                    styles={{
-                      root: {
-                        '> svg > circle:nth-of-type(2)': {
-                          animation: `${durationCircle} linear forwards reverse`,
-                          animationDuration: `${duration}ms`,
-                        },
-                        margin: -3,
-                      },
-                    }}
-                    label={
-                      <Center>
-                        <ThemeIcon
-                          color={iconColor}
-                          radius="xl"
-                          size={32}
-                          variant={tinycolor(iconColor).getAlpha() < 0 ? undefined : 'light'}
-                        >
-                          <LibIcon icon={data.icon} fixedWidth color={iconColor} animation={data.iconAnimation} />
-                        </ThemeIcon>
-                      </Center>
-                    }
-                  />
-                ) : (
-                  <ThemeIcon
-                    color={iconColor}
-                    radius="xl"
-                    size={32}
-                    variant={tinycolor(iconColor).getAlpha() < 0 ? undefined : 'light'}
-                    style={{ alignSelf: !data.alignIcon || data.alignIcon === 'center' ? 'center' : 'start' }}
-                  >
-                    <LibIcon icon={data.icon} fixedWidth color={iconColor} animation={data.iconAnimation} />
-                  </ThemeIcon>
-                )}
-              </>
-            )}
-            <Stack spacing={0}>
-              {data.title && <Text className={classes.title}>{data.title}</Text>}
-              {data.description && (
-                <ReactMarkdown
-                  components={MarkdownComponents}
-                  className={`${!data.title ? classes.descriptionOnly : classes.description} description`}
-                >
-                  {data.description}
-                </ReactMarkdown>
-              )}
-            </Stack>
-          </Group>
-        </Box>
+          {content}
+        </div>
       ),
       {
-        id: toastId,
-        duration: duration,
-        position: position,
+        id: data.id?.toString(),
+        duration,
+        position: position as any,
       }
     );
   });
 
-  return <Toaster />;
+  return (
+    <Toaster
+      richColors={false}
+      closeButton={false}
+      toastOptions={{
+        className: 'bg-transparent border-none shadow-none p-0',
+      }}
+    />
+  );
 };
 
 export default Notifications;

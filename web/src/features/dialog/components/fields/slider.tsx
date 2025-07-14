@@ -1,7 +1,9 @@
-import { Box, Slider, Text } from '@mantine/core';
+import React from 'react';
 import { ISlider } from '../../../../typings/dialog';
 import { Control, useController } from 'react-hook-form';
 import { FormValues } from '../../InputDialog';
+import { Slider } from '@/components/ui/slider';
+import { Label } from '@/components/ui/label';
 
 interface Props {
   row: ISlider;
@@ -9,34 +11,35 @@ interface Props {
   control: Control<FormValues>;
 }
 
-const SliderField: React.FC<Props> = (props) => {
+const SliderField: React.FC<Props> = ({ row, index, control }) => {
   const controller = useController({
-    name: `test.${props.index}.value`,
-    control: props.control,
-    defaultValue: props.row.default || props.row.min || 0,
+    name: `test.${index}.value`,
+    control,
+    defaultValue: row.default || row.min || 0,
   });
 
   return (
-    <Box>
-      <Text sx={{ fontSize: 14, fontWeight: 500 }}>{props.row.label}</Text>
-      <Slider
-        mb={10}
-        value={controller.field.value}
-        name={controller.field.name}
-        ref={controller.field.ref}
-        onBlur={controller.field.onBlur}
-        onChange={controller.field.onChange}
-        defaultValue={props.row.default || props.row.min || 0}
-        min={props.row.min}
-        max={props.row.max}
-        step={props.row.step}
-        disabled={props.row.disabled}
-        marks={[
-          { value: props.row.min || 0, label: props.row.min || 0 },
-          { value: props.row.max || 100, label: props.row.max || 100 },
-        ]}
-      />
-    </Box>
+    <div className="space-y-4">
+      <Label className="text-sm font-medium">{row.label}</Label>
+
+      <div className="space-y-3">
+        <Slider
+          value={[controller.field.value]}
+          onValueChange={(value) => controller.field.onChange(value[0])}
+          min={row.min || 0}
+          max={row.max || 100}
+          step={row.step || 1}
+          disabled={row.disabled}
+          className="w-full"
+        />
+
+        <div className="flex justify-between text-xs text-muted-foreground">
+          <span>{row.min || 0}</span>
+          <span className="font-medium">{controller.field.value}</span>
+          <span>{row.max || 100}</span>
+        </div>
+      </div>
+    </div>
   );
 };
 

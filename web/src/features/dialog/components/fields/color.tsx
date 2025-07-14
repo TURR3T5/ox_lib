@@ -1,8 +1,11 @@
+import React from 'react';
 import { IColorInput } from '../../../../typings/dialog';
 import { Control, useController } from 'react-hook-form';
 import { FormValues } from '../../InputDialog';
-import { ColorInput } from '@mantine/core';
 import LibIcon from '../../../../components/LibIcon';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
 
 interface Props {
   row: IColorInput;
@@ -10,30 +13,54 @@ interface Props {
   control: Control<FormValues>;
 }
 
-const ColorField: React.FC<Props> = (props) => {
+const ColorField: React.FC<Props> = ({ row, index, control }) => {
   const controller = useController({
-    name: `test.${props.index}.value`,
-    control: props.control,
-    defaultValue: props.row.default,
-    rules: { required: props.row.required },
+    name: `test.${index}.value`,
+    control,
+    defaultValue: row.default,
+    rules: { required: row.required },
   });
 
   return (
-    <ColorInput
-      withEyeDropper={false}
-      value={controller.field.value}
-      name={controller.field.name}
-      ref={controller.field.ref}
-      onBlur={controller.field.onBlur}
-      onChange={controller.field.onChange}
-      label={props.row.label}
-      description={props.row.description}
-      disabled={props.row.disabled}
-      defaultValue={props.row.default}
-      format={props.row.format}
-      withAsterisk={props.row.required}
-      icon={props.row.icon && <LibIcon icon={props.row.icon} fixedWidth />}
-    />
+    <div className="space-y-2">
+      <Label
+        htmlFor={`color-${index}`}
+        className={cn(row.required && "after:content-['*'] after:ml-0.5 after:text-red-500")}
+      >
+        {row.label}
+      </Label>
+
+      {row.description && <p className="text-sm text-muted-foreground">{row.description}</p>}
+
+      <div className="flex space-x-2">
+        <input
+          type="color"
+          value={controller.field.value || '#000000'}
+          onChange={controller.field.onChange}
+          onBlur={controller.field.onBlur}
+          disabled={row.disabled}
+          className="h-10 w-16 rounded-md border border-input bg-background"
+        />
+
+        <div className="relative flex-1">
+          {row.icon && (
+            <div className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground flex items-center justify-center">
+              <LibIcon icon={row.icon} fixedWidth />
+            </div>
+          )}
+
+          <Input
+            id={`color-${index}`}
+            value={controller.field.value || ''}
+            onChange={controller.field.onChange}
+            onBlur={controller.field.onBlur}
+            disabled={row.disabled}
+            placeholder="#000000"
+            className={cn(row.icon && 'pl-10')}
+          />
+        </div>
+      </div>
+    </div>
   );
 };
 
