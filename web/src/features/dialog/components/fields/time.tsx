@@ -46,7 +46,7 @@ const TimeField: React.FC<Props> = ({ row, index, control }) => {
 
       <div className="relative">
         {row.icon && (
-          <div className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground flex items-center justify-center">
+          <div className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground flex items-center justify-center z-10">
             <LibIcon icon={row.icon} fixedWidth />
           </div>
         )}
@@ -58,7 +58,10 @@ const TimeField: React.FC<Props> = ({ row, index, control }) => {
           onChange={handleTimeChange}
           onBlur={controller.field.onBlur}
           disabled={row.disabled}
-          className={cn(row.icon && 'pl-10')}
+          className={cn(
+            row.icon && 'pl-10',
+            'bg-muted/80 border-border hover:border-primary/50 focus:border-primary focus:ring-2 focus:ring-primary/20'
+          )}
         />
       </div>
     </div>

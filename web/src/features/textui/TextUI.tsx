@@ -25,9 +25,9 @@ const TextUI: React.FC = () => {
 
   const getMotionProps = (position: TextUiPosition) => {
     const baseProps = {
-      initial: { opacity: 0, scale: 0.95, skewX: '-1deg' },
-      animate: { opacity: 1, scale: 1, skewX: '-1deg' },
-      exit: { opacity: 0, scale: 0.95, skewX: '-1deg' },
+      initial: { opacity: 0, scale: 0.95 },
+      animate: { opacity: 1, scale: 1 },
+      exit: { opacity: 0, scale: 0.95 },
     };
 
     switch (position) {
@@ -80,29 +80,27 @@ const TextUI: React.FC = () => {
   return (
     <AnimatePresence>
       {visible && (
-        <motion.div
-          className={cn('fixed z-50', getPositionClasses(data.position || 'right-center'))}
-          {...getMotionProps(data.position || 'right-center')}
-          transition={{ duration: 0.2 }}
-        >
-          <div className="gaming-card rounded-lg p-4 max-w-sm" style={data.style}>
-            <div className={cn('flex gap-3', data.alignIcon === 'center' ? 'items-center' : 'items-start')}>
-              {data.icon && (
-                <div
-                  className="flex-shrink-0 flex items-center justify-center"
-                  style={{ color: data.iconColor || 'hsl(var(--primary))' }}
-                >
-                  <LibIcon icon={data.icon} fixedWidth animation={data.iconAnimation} className="w-5 h-5" />
+        <div className={cn('fixed z-50 -skew-x-1', getPositionClasses(data.position || 'right-center'))}>
+          <motion.div {...getMotionProps(data.position || 'right-center')} transition={{ duration: 0.2 }}>
+            <div className="gaming-card rounded-lg p-4 max-w-sm" style={data.style}>
+              <div className="flex gap-3 items-center">
+                {data.icon && (
+                  <div
+                    className="flex-shrink-0 w-5 h-5 flex items-center justify-center"
+                    style={{ color: data.iconColor || 'hsl(var(--primary))' }}
+                  >
+                    <LibIcon icon={data.icon} fixedWidth animation={data.iconAnimation} className="w-5 h-5" />
+                  </div>
+                )}
+                <div className="text-sm leading-relaxed text-muted-foreground">
+                  <ReactMarkdown components={MarkdownComponents} remarkPlugins={[remarkGfm]}>
+                    {data.text}
+                  </ReactMarkdown>
                 </div>
-              )}
-              <div className="text-sm leading-relaxed text-muted-foreground">
-                <ReactMarkdown components={MarkdownComponents} remarkPlugins={[remarkGfm]}>
-                  {data.text}
-                </ReactMarkdown>
               </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       )}
     </AnimatePresence>
   );

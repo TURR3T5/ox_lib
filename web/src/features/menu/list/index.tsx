@@ -168,86 +168,87 @@ const ListMenu: React.FC = () => {
   return (
     <AnimatePresence>
       {visible && (
-        <motion.div
-          className={cn('fixed z-50 w-96', getPositionClasses(menu.position))}
-          initial={{
-            opacity: 0,
-            scale: 0.95,
-          }}
-          animate={{
-            opacity: 1,
-            scale: 1,
-          }}
-          exit={{
-            opacity: 0,
-            scale: 0.95,
-          }}
-          transition={{ duration: 0.15 }}
-        >
-          <div className="relative -skew-x-1">
-            {(isValuesObject(menu.items[selected].values)
-              ? (menu.items[selected].values as any)[indexStates[selected]]?.description
-              : menu.items[selected].description) && (
-              <motion.div
-                className="absolute -right-2 top-0 transform translate-x-full z-10"
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -10 }}
-              >
-                <div className="gaming-card rounded-lg p-3 text-sm shadow-lg max-w-sm break-words">
-                  <p className="text-muted-foreground">
-                    {isValuesObject(menu.items[selected].values)
-                      ? (menu.items[selected].values as any)[indexStates[selected]].description
-                      : menu.items[selected].description}
-                  </p>
-                </div>
-              </motion.div>
-            )}
-
-            <Header title={menu.title} />
-
-            <div
-              className={cn(
-                'gaming-card border-t-0 rounded-t-none overflow-hidden',
-                'max-h-[415px]',
-                menu.items.length <= 6 || selected === menu.items.length - 1 ? 'rounded-b-lg' : ''
+        <div className={cn('fixed z-50 w-96 -skew-x-1', getPositionClasses(menu.position))}>
+          <motion.div
+            initial={{
+              opacity: 0,
+              scale: 0.95,
+            }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+            }}
+            exit={{
+              opacity: 0,
+              scale: 0.95,
+            }}
+            transition={{ duration: 0.15 }}
+          >
+            <div className="relative">
+              {(isValuesObject(menu.items[selected].values)
+                ? (menu.items[selected].values as any)[indexStates[selected]]?.description
+                : menu.items[selected].description) && (
+                <motion.div
+                  className="absolute -right-2 top-0 transform translate-x-full z-10"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                >
+                  <div className="gaming-card rounded-lg p-3 text-sm shadow-lg max-w-sm break-words">
+                    <p className="text-muted-foreground">
+                      {isValuesObject(menu.items[selected].values)
+                        ? (menu.items[selected].values as any)[indexStates[selected]].description
+                        : menu.items[selected].description}
+                    </p>
+                  </div>
+                </motion.div>
               )}
-              onKeyDown={moveMenu}
-              tabIndex={0}
-            >
-              <div className="overflow-y-auto p-2 pb-4 space-y-1">
-                {menu.items.map((item, index) => (
-                  <React.Fragment key={`menu-item-${index}`}>
-                    {item.label && (
-                      <ListItem
-                        index={index}
-                        item={item}
-                        scrollIndex={indexStates[index]}
-                        checked={checkedStates[index]}
-                        ref={(el) => {
-                          if (listRefs.current) {
-                            listRefs.current[index] = el;
-                          }
-                        }}
-                        isSelected={selected === index}
-                      />
-                    )}
-                  </React.Fragment>
-                ))}
-              </div>
-            </div>
 
-            {menu.items.length > 6 && selected !== menu.items.length - 1 && (
-              <motion.div
-                className="gaming-card border-t-0 rounded-t-none rounded-b-lg h-6 flex items-center justify-center"
-                animate={{ y: [0, 2, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
+              <Header title={menu.title} />
+
+              <div
+                className={cn(
+                  'gaming-card border-t-0 rounded-t-none overflow-hidden',
+                  'max-h-[415px]',
+                  menu.items.length <= 6 || selected === menu.items.length - 1 ? 'rounded-b-lg' : ''
+                )}
+                onKeyDown={moveMenu}
+                tabIndex={0}
               >
-                <LibIcon icon="chevron-down" className="w-4 h-4 text-primary" />
-              </motion.div>
-            )}
-          </div>
-        </motion.div>
+                <div className="overflow-y-auto p-2 pb-4 space-y-1">
+                  {menu.items.map((item, index) => (
+                    <React.Fragment key={`menu-item-${index}`}>
+                      {item.label && (
+                        <ListItem
+                          index={index}
+                          item={item}
+                          scrollIndex={indexStates[index]}
+                          checked={checkedStates[index]}
+                          ref={(el) => {
+                            if (listRefs.current) {
+                              listRefs.current[index] = el;
+                            }
+                          }}
+                          isSelected={selected === index}
+                        />
+                      )}
+                    </React.Fragment>
+                  ))}
+                </div>
+              </div>
+
+              {menu.items.length > 6 && selected !== menu.items.length - 1 && (
+                <motion.div
+                  className="gaming-card border-t-0 rounded-t-none rounded-b-lg h-6 flex items-center justify-center"
+                  animate={{ y: [0, 2, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                >
+                  <LibIcon icon="chevron-down" className="w-4 h-4 text-primary" />
+                </motion.div>
+              )}
+            </div>
+          </motion.div>
+        </div>
       )}
     </AnimatePresence>
   );
