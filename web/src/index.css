@@ -2,316 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Thin 100 */
-@font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-Thin.ttf') format('truetype');
-  font-display: auto;
-  font-style: normal;
-  font-weight: 100;
-  font-stretch: normal;
-}
-@font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-ThinItalic.ttf') format('truetype');
-  font-display: auto;
-  font-style: italic;
-  font-weight: 100;
-  font-stretch: normal;
-}
-
-/* ExtraLight 200 */
-@font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-ExtraLight.ttf') format('truetype');
-  font-display: auto;
-  font-style: normal;
-  font-weight: 200;
-  font-stretch: normal;
-}
-@font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-ExtraLightItalic.ttf') format('truetype');
-  font-display: auto;
-  font-style: italic;
-  font-weight: 200;
-  font-stretch: normal;
-}
-
-/* Light 300 */
-@font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-Light.ttf') format('truetype');
-  font-display: auto;
-  font-style: normal;
-  font-weight: 300;
-  font-stretch: normal;
-}
-@font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-LightItalic.ttf') format('truetype');
-  font-display: auto;
-  font-style: italic;
-  font-weight: 300;
-  font-stretch: normal;
-}
-
-/* Regular 400 */
-@font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-Regular.ttf') format('truetype');
-  font-display: auto;
-  font-style: normal;
-  font-weight: 400;
-  font-stretch: normal;
-}
-@font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-Italic.ttf') format('truetype');
-  font-display: auto;
-  font-style: italic;
-  font-weight: 400;
-  font-stretch: normal;
-}
-
-/* Medium 500 */
-@font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-Medium.ttf') format('truetype');
-  font-display: auto;
-  font-style: normal;
-  font-weight: 500;
-  font-stretch: normal;
-}
-@font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-MediumItalic.ttf') format('truetype');
-  font-display: auto;
-  font-style: italic;
-  font-weight: 500;
-  font-stretch: normal;
-}
-
-/* SemiBold 600 */
-@font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-SemiBold.ttf') format('truetype');
-  font-display: auto;
-  font-style: normal;
-  font-weight: 600;
-  font-stretch: normal;
-}
-@font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-SemiBoldItalic.ttf') format('truetype');
-  font-display: auto;
-  font-style: italic;
-  font-weight: 600;
-  font-stretch: normal;
-}
-
-/* Bold 700 */
-@font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-Bold.ttf') format('truetype');
-  font-display: auto;
-  font-style: normal;
-  font-weight: 700;
-  font-stretch: normal;
-}
-@font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-BoldItalic.ttf') format('truetype');
-  font-display: auto;
-  font-style: italic;
-  font-weight: 700;
-  font-stretch: normal;
-}
-
-/* ExtraBold 800 */
-@font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-ExtraBold.ttf') format('truetype');
-  font-display: auto;
-  font-style: normal;
-  font-weight: 800;
-  font-stretch: normal;
-}
-@font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-ExtraBoldItalic.ttf') format('truetype');
-  font-display: auto;
-  font-style: italic;
-  font-weight: 800;
-  font-stretch: normal;
-}
-
-/* Black 900 */
-@font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-Black.ttf') format('truetype');
-  font-display: auto;
-  font-style: normal;
-  font-weight: 900;
-  font-stretch: normal;
-}
-@font-face {
-  font-family: 'Roboto';
-  src: url('/fonts/Roboto-BlackItalic.ttf') format('truetype');
-  font-display: auto;
-  font-style: italic;
-  font-weight: 900;
-  font-stretch: normal;
-}
-
-/* Roboto Mono */
-/* Thin 100 */
-@font-face {
-  font-family: 'Roboto Mono';
-  src: url('/fonts/RobotoMono-Thin.ttf') format('truetype');
-  font-display: auto;
-  font-style: normal;
-  font-weight: 100;
-  font-stretch: normal;
-}
-@font-face {
-  font-family: 'Roboto Mono';
-  src: url('/fonts/RobotoMono-ThinItalic.ttf') format('truetype');
-  font-display: auto;
-  font-style: italic;
-  font-weight: 100;
-  font-stretch: normal;
-}
-
-/* ExtraLight 200 */
-@font-face {
-  font-family: 'Roboto Mono';
-  src: url('/fonts/RobotoMono-ExtraLight.ttf') format('truetype');
-  font-display: auto;
-  font-style: normal;
-  font-weight: 200;
-  font-stretch: normal;
-}
-@font-face {
-  font-family: 'Roboto Mono';
-  src: url('/fonts/RobotoMono-ExtraLightItalic.ttf') format('truetype');
-  font-display: auto;
-  font-style: italic;
-  font-weight: 200;
-  font-stretch: normal;
-}
-
-/* Light 300 */
-@font-face {
-  font-family: 'Roboto Mono';
-  src: url('/fonts/RobotoMono-Light.ttf') format('truetype');
-  font-display: auto;
-  font-style: normal;
-  font-weight: 300;
-  font-stretch: normal;
-}
-@font-face {
-  font-family: 'Roboto Mono';
-  src: url('/fonts/RobotoMono-LightItalic.ttf') format('truetype');
-  font-display: auto;
-  font-style: italic;
-  font-weight: 300;
-  font-stretch: normal;
-}
-
-/* Regular 400 */
-@font-face {
-  font-family: 'Roboto Mono';
-  src: url('/fonts/RobotoMono-Regular.ttf') format('truetype');
-  font-display: auto;
-  font-style: normal;
-  font-weight: 400;
-  font-stretch: normal;
-}
-@font-face {
-  font-family: 'Roboto Mono';
-  src: url('/fonts/RobotoMono-Italic.ttf') format('truetype');
-  font-display: auto;
-  font-style: italic;
-  font-weight: 400;
-  font-stretch: normal;
-}
-
-/* Medium 500 */
-@font-face {
-  font-family: 'Roboto Mono';
-  src: url('/fonts/RobotoMono-Medium.ttf') format('truetype');
-  font-display: auto;
-  font-style: normal;
-  font-weight: 500;
-  font-stretch: normal;
-}
-@font-face {
-  font-family: 'Roboto Mono';
-  src: url('/fonts/RobotoMono-MediumItalic.ttf') format('truetype');
-  font-display: auto;
-  font-style: italic;
-  font-weight: 500;
-  font-stretch: normal;
-}
-
-/* SemiBold 600 */
-@font-face {
-  font-family: 'Roboto Mono';
-  src: url('/fonts/RobotoMono-SemiBold.ttf') format('truetype');
-  font-display: auto;
-  font-style: normal;
-  font-weight: 600;
-  font-stretch: normal;
-}
-@font-face {
-  font-family: 'Roboto Mono';
-  src: url('/fonts/RobotoMono-SemiBoldItalic.ttf') format('truetype');
-  font-display: auto;
-  font-style: italic;
-  font-weight: 600;
-  font-stretch: normal;
-}
-
-/* Bold 700 */
-@font-face {
-  font-family: 'Roboto Mono';
-  src: url('/fonts/RobotoMono-Bold.ttf') format('truetype');
-  font-display: auto;
-  font-style: normal;
-  font-weight: 700;
-  font-stretch: normal;
-}
-@font-face {
-  font-family: 'Roboto Mono';
-  src: url('/fonts/RobotoMono-BoldItalic.ttf') format('truetype');
-  font-display: auto;
-  font-style: italic;
-  font-weight: 700;
-  font-stretch: normal;
-}
-
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
-    'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100vh;
   user-select: none;
   overflow: hidden !important;
-}
-
-p {
-  margin: 0;
+  color: hsl(var(--foreground));
 }
 
 #root {
   height: 100%;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 ::-webkit-scrollbar {
@@ -322,54 +24,68 @@ code {
   height: 0;
 }
 
-.toast-inform {
-  background-color: #2980b9;
-}
-
-.toast-success {
-  background-color: #27ae60;
-}
-
-.toast-error {
-  background-color: #c0392b;
-}
-
-
-
 @layer base {
   :root {
-    /* Gaming Theme - Dark Cyberpunk */
-    --background: 212 7% 7%;  /* #101113 */
-    --foreground: 0 0% 100%;  /* White headings */
-    --card: 215 7% 11%;  /* #1A1B1E gradient start */
-    --card-foreground: 220 9% 76%;  /* #C1C2C5 secondary text */
-    --popover: 215 7% 11%;  /* #1A1B1E */
+    
+    --background: 212 7% 7%;  
+    --foreground: 0 0% 100%;  
+    --card: 215 7% 11%;  
+    --card-foreground: 220 9% 76%;  
+    --popover: 215 7% 11%;  
     --popover-foreground: 0 0% 100%;
-    --primary: 212 99% 72%;  /* #74c0fc electric blue */
-    --primary-foreground: 0 0% 0%;  /* Black text on blue */
-    --secondary: 220 6% 15%;  /* #25262b */
-    --secondary-foreground: 220 9% 76%;  /* #C1C2C5 */
-    --muted: 215 6% 12%;  /* #1a1b1e input background */
-    --muted-foreground: 220 9% 76%;  /* #C1C2C5 */
-    --accent: 212 99% 72%;  /* #74c0fc electric blue */
+    --primary: 212 99% 72%;  
+    --primary-foreground: 0 0% 0%;  
+    --secondary: 220 6% 15%;  
+    --secondary-foreground: 220 9% 76%;  
+    --muted: 215 6% 12%;  
+    --muted-foreground: 220 9% 76%;  
+    --accent: 212 99% 72%;  
     --accent-foreground: 0 0% 0%;
-    --destructive: 0 84% 60%;  /* Red for errors */
+    --destructive: 0 84% 60%;  
     --destructive-foreground: 0 0% 98%;
-    --border: 220 6% 15%;  /* #25262b */
-    --input: 220 4% 22%;  /* #373A40 input borders */
-    --ring: 212 99% 72%;  /* #74c0fc electric blue */
-    --success: 142 76% 36%;  /* Green for success */
-    --warning: 45 93% 47%;  /* Orange for warning */
+    --border: 220 6% 15%;  
+    --input: 220 4% 22%;  
+    --ring: 212 99% 72%;  
+    --success: 142 76% 36%;  
+    --warning: 45 93% 47%;  
     --radius: 0.5rem;
   }
 }
 
 .gaming-skew {
-  transform: skew(-1deg);
+  transform: skew(-1deg) !important;
 }
 
 .gaming-skew-strong {
-  transform: skew(-2deg);
+  transform: skew(-2deg) !important;
+}
+
+.gaming-card.gaming-skew {
+  transform: skew(-1deg) !important;
+}
+
+.fixed {
+  position: fixed !important;
+}
+
+.top-1\/2 {
+  top: 50% !important;
+}
+
+.left-1\/2 {
+  left: 50% !important;
+}
+
+.-translate-x-1\/2 {
+  transform: translateX(-50%) !important;
+}
+
+.-translate-y-1\/2 {
+  transform: translateY(-50%) !important;
+}
+
+.gaming-skew.fixed.-translate-x-1\/2.-translate-y-1\/2 {
+  transform: translateX(-50%) translateY(-50%) skew(-1deg) !important;
 }
 
 .gaming-card {
@@ -377,6 +93,7 @@ code {
   border: 1px solid hsl(var(--border));
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
   transition: all 500ms ease;
+  color: hsl(var(--card-foreground)); 
 }
 
 .gaming-card:hover {
