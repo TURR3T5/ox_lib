@@ -23,17 +23,57 @@ const TextUI: React.FC = () => {
 
   useNuiEvent('textUiHide', () => setVisible(false));
 
+  const getMotionProps = (position: TextUiPosition) => {
+    const baseProps = {
+      initial: { opacity: 0, scale: 0.95, skewX: '-1deg' },
+      animate: { opacity: 1, scale: 1, skewX: '-1deg' },
+      exit: { opacity: 0, scale: 0.95, skewX: '-1deg' },
+    };
+
+    switch (position) {
+      case 'top-center':
+        return {
+          ...baseProps,
+          initial: { ...baseProps.initial, x: '-50%' },
+          animate: { ...baseProps.animate, x: '-50%' },
+          exit: { ...baseProps.exit, x: '-50%' },
+        };
+      case 'bottom-center':
+        return {
+          ...baseProps,
+          initial: { ...baseProps.initial, x: '-50%' },
+          animate: { ...baseProps.animate, x: '-50%' },
+          exit: { ...baseProps.exit, x: '-50%' },
+        };
+      case 'left-center':
+        return {
+          ...baseProps,
+          initial: { ...baseProps.initial, y: '-50%' },
+          animate: { ...baseProps.animate, y: '-50%' },
+          exit: { ...baseProps.exit, y: '-50%' },
+        };
+      case 'right-center':
+      default:
+        return {
+          ...baseProps,
+          initial: { ...baseProps.initial, y: '-50%' },
+          animate: { ...baseProps.animate, y: '-50%' },
+          exit: { ...baseProps.exit, y: '-50%' },
+        };
+    }
+  };
+
   const getPositionClasses = (position: TextUiPosition) => {
     switch (position) {
       case 'top-center':
-        return 'top-8 left-1/2 -translate-x-1/2';
+        return 'top-8 left-1/2';
       case 'bottom-center':
-        return 'bottom-8 left-1/2 -translate-x-1/2';
+        return 'bottom-8 left-1/2';
       case 'left-center':
-        return 'left-8 top-1/2 -translate-y-1/2';
+        return 'left-8 top-1/2';
       case 'right-center':
       default:
-        return 'right-8 top-1/2 -translate-y-1/2';
+        return 'right-8 top-1/2';
     }
   };
 
@@ -42,12 +82,10 @@ const TextUI: React.FC = () => {
       {visible && (
         <motion.div
           className={cn('fixed z-50', getPositionClasses(data.position || 'right-center'))}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
+          {...getMotionProps(data.position || 'right-center')}
           transition={{ duration: 0.2 }}
         >
-          <div className="gaming-card rounded-lg p-4 max-w-sm gaming-skew" style={data.style}>
+          <div className="gaming-card rounded-lg p-4 max-w-sm" style={data.style}>
             <div className={cn('flex gap-3', data.alignIcon === 'center' ? 'items-center' : 'items-start')}>
               {data.icon && (
                 <div

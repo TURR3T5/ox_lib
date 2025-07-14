@@ -128,7 +128,6 @@ const RadialMenu: React.FC = () => {
               </linearGradient>
             </defs>
 
-            {/* Background circle */}
             <g transform="translate(200, 200)">
               <circle r={200} fill="url(#bgGradient)" stroke="hsl(220, 6%, 15%)" strokeWidth="3" />
             </g>
@@ -184,18 +183,18 @@ const RadialMenu: React.FC = () => {
                         width={32}
                         height={32}
                         fixedWidth
-                        className="fill-primary group-hover:fill-primary transition-all duration-300"
+                        className="fill-muted-foreground group-hover:fill-primary transition-all duration-300"
                       />
                     )}
 
                     <text
                       x={iconX}
                       y={iconY + (splitTextIntoLines(item.label, 15).length > 2 ? 18 : 32)}
-                      fill="hsl(220, 9%, 76%)"
+                      fill="hsl(220, 9%, 46%)"
                       textAnchor="middle"
                       fontSize={calculateFontSize(item.label)}
-                      fontWeight="600"
-                      className="pointer-events-none group-hover:fill-white transition-all duration-300 uppercase tracking-wide"
+                      fontWeight="500"
+                      className="pointer-events-none group-hover:fill-muted-foreground transition-all duration-300 uppercase tracking-wide"
                       lengthAdjust="spacingAndGlyphs"
                     >
                       {splitTextIntoLines(item.label, 15).map((line, index) => (
@@ -209,7 +208,6 @@ const RadialMenu: React.FC = () => {
               );
             })}
 
-            {/* Center circle */}
             <g transform="translate(200, 200)" onClick={handleCenterClick}>
               <circle
                 r={32}
@@ -221,12 +219,11 @@ const RadialMenu: React.FC = () => {
             </g>
           </svg>
 
-          {/* Center icon */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
             <LibIcon
               icon={!menu.sub && menu.page < 2 ? 'xmark' : 'arrow-rotate-left'}
               fixedWidth
-              className="w-8 h-8 text-black font-bold"
+              className="w-8 h-8 text-muted-foreground font-bold"
             />
           </div>
         </motion.div>

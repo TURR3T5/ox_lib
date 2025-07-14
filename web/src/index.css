@@ -26,7 +26,6 @@ body {
 
 @layer base {
   :root {
-    
     --background: 212 7% 7%;  
     --foreground: 0 0% 100%;  
     --card: 215 7% 11%;  
@@ -50,42 +49,6 @@ body {
     --warning: 45 93% 47%;  
     --radius: 0.5rem;
   }
-}
-
-.gaming-skew {
-  transform: skew(-1deg) !important;
-}
-
-.gaming-skew-strong {
-  transform: skew(-2deg) !important;
-}
-
-.gaming-card.gaming-skew {
-  transform: skew(-1deg) !important;
-}
-
-.fixed {
-  position: fixed !important;
-}
-
-.top-1\/2 {
-  top: 50% !important;
-}
-
-.left-1\/2 {
-  left: 50% !important;
-}
-
-.-translate-x-1\/2 {
-  transform: translateX(-50%) !important;
-}
-
-.-translate-y-1\/2 {
-  transform: translateY(-50%) !important;
-}
-
-.gaming-skew.fixed.-translate-x-1\/2.-translate-y-1\/2 {
-  transform: translateX(-50%) translateY(-50%) skew(-1deg) !important;
 }
 
 .gaming-card {

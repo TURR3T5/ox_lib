@@ -21,10 +21,25 @@ const Progressbar: React.FC = () => {
     <AnimatePresence>
       {visible && (
         <motion.div
-          className="fixed bottom-20 left-1/2 -translate-x-1/2 w-[400px] h-[60px] z-50 gaming-skew"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 50 }}
+          className="fixed bottom-20 left-1/2 w-[400px] h-[60px] z-50"
+          initial={{
+            opacity: 0,
+            y: 50,
+            x: '-50%',
+            skewX: '-1deg',
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+            x: '-50%',
+            skewX: '-1deg',
+          }}
+          exit={{
+            opacity: 0,
+            y: 50,
+            x: '-50%',
+            skewX: '-1deg',
+          }}
           transition={{ duration: 0.2 }}
         >
           <div className="relative w-full h-full rounded-lg gaming-card overflow-hidden shadow-2xl">

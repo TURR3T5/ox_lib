@@ -169,10 +169,22 @@ const ListMenu: React.FC = () => {
     <AnimatePresence>
       {visible && (
         <motion.div
-          className={cn('fixed z-50 w-96', getPositionClasses(menu.position), 'gaming-skew')}
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
+          className={cn('fixed z-50 w-96', getPositionClasses(menu.position))}
+          initial={{
+            opacity: 0,
+            scale: 0.95,
+            skewX: '-1deg',
+          }}
+          animate={{
+            opacity: 1,
+            scale: 1,
+            skewX: '-1deg',
+          }}
+          exit={{
+            opacity: 0,
+            scale: 0.95,
+            skewX: '-1deg',
+          }}
           transition={{ duration: 0.15 }}
         >
           <div className="relative">
@@ -180,12 +192,15 @@ const ListMenu: React.FC = () => {
               ? (menu.items[selected].values as any)[indexStates[selected]]?.description
               : menu.items[selected].description) && (
               <motion.div
-                className="absolute -top-2 left-0 right-0 transform -translate-y-full z-10"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
+                className="absolute -right-2 top-0 transform translate-x-full z-10"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
               >
-                <div className="gaming-card rounded-lg p-3 text-sm shadow-lg max-w-sm break-words">
+                <div
+                  className="gaming-card rounded-lg p-3 text-sm shadow-lg max-w-sm break-words"
+                  style={{ transform: 'skewX(1deg)' }}
+                >
                   <p className="text-muted-foreground">
                     {isValuesObject(menu.items[selected].values)
                       ? (menu.items[selected].values as any)[indexStates[selected]].description
@@ -206,7 +221,7 @@ const ListMenu: React.FC = () => {
               onKeyDown={moveMenu}
               tabIndex={0}
             >
-              <div className="overflow-y-auto p-2 space-y-1">
+              <div className="overflow-y-auto p-2 pb-4 space-y-1">
                 {menu.items.map((item, index) => (
                   <React.Fragment key={`menu-item-${index}`}>
                     {item.label && (

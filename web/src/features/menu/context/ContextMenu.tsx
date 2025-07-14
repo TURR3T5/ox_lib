@@ -51,14 +51,31 @@ const ContextMenu: React.FC = () => {
     <AnimatePresence>
       {visible && (
         <motion.div
-          className="fixed right-8 top-1/2 -translate-y-1/2 w-96 max-h-[70vh] z-50 gaming-skew"
-          initial={{ opacity: 0, x: 50, scale: 0.95 }}
-          animate={{ opacity: 1, x: 0, scale: 1 }}
-          exit={{ opacity: 0, x: 50, scale: 0.95 }}
+          className="fixed right-40 top-1/2 w-[400px] max-h-[70vh] z-50"
+          initial={{
+            opacity: 0,
+            x: 50,
+            y: '-50%',
+            skewX: '-1deg',
+            scale: 0.95,
+          }}
+          animate={{
+            opacity: 1,
+            x: 0,
+            y: '-50%',
+            skewX: '-1deg',
+            scale: 1,
+          }}
+          exit={{
+            opacity: 0,
+            x: 50,
+            y: '-50%',
+            skewX: '-1deg',
+            scale: 0.95,
+          }}
           transition={{ duration: 0.2 }}
         >
           <div className="gaming-card rounded-lg overflow-hidden shadow-2xl">
-            {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-border bg-gradient-to-r from-card to-secondary">
               {contextMenu.menu && (
                 <HeaderButton icon="chevron-left" iconSize={16} handleClick={() => openMenu(contextMenu.menu)} />
@@ -73,7 +90,6 @@ const ContextMenu: React.FC = () => {
               <HeaderButton icon="xmark" canClose={contextMenu.canClose} iconSize={18} handleClick={closeContext} />
             </div>
 
-            {/* Content */}
             <div className="max-h-[calc(70vh-4rem)] overflow-y-auto">
               <div className="space-y-0">
                 {Object.entries(contextMenu.options).map((option, index) => (

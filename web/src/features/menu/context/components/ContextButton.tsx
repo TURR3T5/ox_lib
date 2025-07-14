@@ -98,7 +98,7 @@ const ContextButton: React.FC<{
       </HoverCardTrigger>
 
       {hasMetadataToShow && (
-        <HoverCardContent className="w-80 p-4 gaming-card gaming-skew" side="left" align="start">
+        <HoverCardContent className="w-80 p-4 gaming-card skew-x-1" side="left" align="start">
           {button.image && (
             <img src={button.image} alt="Preview" className="w-full rounded-lg mb-3 border border-border" />
           )}
