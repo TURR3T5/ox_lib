@@ -43,7 +43,7 @@ const Progressbar: React.FC = () => {
   return (
     <AnimatePresence>
       {visible && (
-        <div className="fixed left-1/2 bottom-20 w-[500px] z-50 -skew-x-1">
+        <div className="fixed left-1/2 bottom-20 w-[400px] z-50 -skew-x-1">
           <motion.div
             initial={{
               opacity: 0,
@@ -66,39 +66,44 @@ const Progressbar: React.FC = () => {
             transition={{ duration: 0.3 }}
           >
             <div className="gaming-card rounded-lg p-6 shadow-2xl">
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-6">
                 <span className="text-sm font-bold text-white uppercase tracking-wider">{label}</span>
                 <span className="text-sm font-bold text-primary">{Math.round(progress)}%</span>
               </div>
 
-              <div className="flex gap-1 h-8 mb-4">
+              <div className="flex gap-1 justify-center items-center mb-4">
                 {segments.map((segment) => {
                   const segmentProgress = Math.max(0, Math.min(1, (progress - segment * 5) / 5));
-                  const isActive = progress > segment * 5;
+                  const isCompleted = progress >= (segment + 1) * 5;
 
                   return (
                     <motion.div
                       key={segment}
-                      className="flex-1 bg-secondary/30 relative overflow-hidden rounded-sm"
-                      style={{
-                        transform: 'skewX(-12deg)',
-                        transformOrigin: 'bottom',
-                      }}
+                      className="bg-secondary/50 w-[8px] h-[16px] -skew-x-5 relative overflow-hidden rounded-sm"
                       initial={{ scaleY: 0 }}
                       animate={{ scaleY: 1 }}
-                      transition={{ delay: segment * 0.02 }}
+                      transition={{ delay: segment * 0.02, duration: 0.2 }}
                     >
                       <motion.div
-                        className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-primary to-primary/80 rounded-sm"
+                        className="absolute left-0 top-0 w-full bg-gradient-to-t from-primary via-primary/90 to-primary/80 rounded-sm"
                         initial={{ height: '0%' }}
                         animate={{ height: `${segmentProgress * 100}%` }}
-                        transition={{ duration: 0.1 }}
+                        transition={{ duration: 0.15, ease: 'easeOut' }}
+                        style={{ transformOrigin: 'bottom' }}
                       />
-                      {isActive && (
+
+                      {isCompleted && (
                         <motion.div
-                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-sm"
-                          animate={{ x: ['0%', '100%'] }}
-                          transition={{ duration: 0.8, repeat: Infinity }}
+                          className="absolute inset-0 bg-gradient-to-t from-transparent via-white/20 to-transparent rounded-sm"
+                          animate={{
+                            y: ['-100%', '100%'],
+                            opacity: [0, 1, 0],
+                          }}
+                          transition={{
+                            duration: 1.5,
+                            repeat: Infinity,
+                            delay: segment * 0.05,
+                          }}
                         />
                       )}
                     </motion.div>
