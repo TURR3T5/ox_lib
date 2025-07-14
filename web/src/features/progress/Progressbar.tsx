@@ -21,15 +21,15 @@ const Progressbar: React.FC = () => {
     <AnimatePresence>
       {visible && (
         <motion.div
-          className="fixed bottom-20 left-1/2 -translate-x-1/2 w-[350px] h-[45px] z-50"
+          className="fixed bottom-20 left-1/2 -translate-x-1/2 w-[400px] h-[60px] z-50 gaming-skew"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 50 }}
           transition={{ duration: 0.2 }}
         >
-          <div className="relative w-full h-full rounded-sm bg-muted overflow-hidden shadow-lg">
+          <div className="relative w-full h-full rounded-lg gaming-card overflow-hidden shadow-2xl">
             <motion.div
-              className="h-full bg-primary"
+              className="h-full bg-gradient-to-r from-primary via-primary/90 to-primary shadow-lg"
               initial={{ width: '0%' }}
               animate={{ width: '100%' }}
               transition={{
@@ -43,10 +43,12 @@ const Progressbar: React.FC = () => {
             />
 
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-sm font-medium text-primary-foreground drop-shadow-sm max-w-full px-2 truncate">
+              <span className="text-sm font-bold text-white drop-shadow-lg max-w-full px-4 truncate uppercase tracking-wide">
                 {label}
               </span>
             </div>
+
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse opacity-30" />
           </div>
         </motion.div>
       )}

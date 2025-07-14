@@ -16,6 +16,7 @@ import TimeField from './components/fields/time';
 import dayjs from 'dayjs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import LibIcon from '../../components/LibIcon';
 
 export type FormValues = {
   test: {
@@ -61,7 +62,6 @@ const InputDialog: React.FC = () => {
 
       fieldForm.insert(index, { value: value ?? null });
 
-      // Fix the options mapping
       if ((row.type === 'select' || row.type === 'multi-select') && row.options) {
         row.options = row.options.map((option) =>
           typeof option === 'string'
@@ -105,17 +105,20 @@ const InputDialog: React.FC = () => {
 
   return (
     <Dialog open={visible} onOpenChange={() => handleClose()}>
-      <DialogContent className="max-w-sm">
-        <DialogHeader>
-          <DialogTitle className="text-center text-lg">{fields.heading}</DialogTitle>
+      <DialogContent className="max-w-md">
+        <DialogHeader className="space-y-4">
+          <DialogTitle className="flex items-center gap-3">
+            <LibIcon icon="keyboard" className="w-6 h-6 text-primary" />
+            {fields.heading}
+          </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={onSubmit} className="space-y-4">
-          <div className="space-y-4">
+        <form onSubmit={onSubmit} className="space-y-6">
+          <div className="space-y-5">
             {fieldForm.fields.map((item, index) => {
               const row = fields.rows[index];
               return (
-                <React.Fragment key={item.id}>
+                <div key={item.id} className="gaming-card rounded-lg p-4">
                   {row.type === 'input' && (
                     <InputField
                       register={form.register(`test.${index}.value`, { required: row.required })}
@@ -147,21 +150,26 @@ const InputDialog: React.FC = () => {
                       index={index}
                     />
                   )}
-                </React.Fragment>
+                </div>
               );
             })}
           </div>
 
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-3 pt-4">
             <Button
               type="button"
               variant="outline"
               onClick={() => handleClose()}
               disabled={fields.options?.allowCancel === false}
+              className="flex items-center gap-2"
             >
+              <LibIcon icon="xmark" className="w-4 h-4" />
               {locale.ui.cancel}
             </Button>
-            <Button type="submit">{locale.ui.confirm}</Button>
+            <Button type="submit" className="flex items-center gap-2">
+              <LibIcon icon="check" className="w-4 h-4" />
+              {locale.ui.confirm}
+            </Button>
           </div>
         </form>
       </DialogContent>

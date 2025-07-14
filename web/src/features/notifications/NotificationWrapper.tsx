@@ -14,7 +14,6 @@ const Notifications: React.FC = () => {
     const duration = data.duration || 3000;
     let position = data.position || 'top-right';
 
-    // Backwards compat
     switch (position) {
       case 'top':
         position = 'top-center';
@@ -24,7 +23,6 @@ const Notifications: React.FC = () => {
         break;
     }
 
-    // Auto-assign icons based on type
     if (!data.icon) {
       switch (data.type) {
         case 'error':
@@ -65,7 +63,9 @@ const Notifications: React.FC = () => {
           </div>
         )}
         <div className="min-w-0 flex-1">
-          {data.title && <div className="font-medium text-sm leading-tight">{data.title}</div>}
+          {data.title && (
+            <div className="font-semibold text-sm leading-tight text-white uppercase tracking-wide">{data.title}</div>
+          )}
           {data.description && (
             <div className={cn('text-xs text-muted-foreground leading-tight', !data.title && 'text-sm')}>
               <ReactMarkdown components={MarkdownComponents}>{data.description}</ReactMarkdown>
@@ -79,8 +79,8 @@ const Notifications: React.FC = () => {
       (t) => (
         <div
           className={cn(
-            'bg-background border border-border rounded-lg shadow-lg p-3 w-80',
-            'animate-in slide-in-from-top-2 duration-200',
+            'gaming-card rounded-lg p-4 w-80 gaming-skew',
+            'border border-border hover:border-primary/50',
             data.style as any
           )}
         >
@@ -99,6 +99,8 @@ const Notifications: React.FC = () => {
     <Toaster
       richColors={false}
       closeButton={false}
+      expand={true}
+      visibleToasts={10}
       toastOptions={{
         className: 'bg-transparent border-none shadow-none p-0',
       }}

@@ -15,6 +15,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import LibIcon from '../../components/LibIcon';
 
 const AlertDialog: React.FC = () => {
   const { locale } = useLocales();
@@ -43,19 +44,22 @@ const AlertDialog: React.FC = () => {
       <DialogContent
         className={`max-w-${dialogData.size || 'md'} ${dialogData.overflow ? 'max-h-[80vh] overflow-y-auto' : ''}`}
       >
-        <DialogHeader>
-          <DialogTitle>
+        <DialogHeader className="space-y-4">
+          <DialogTitle className="flex items-center gap-3">
+            <LibIcon icon="exclamation-triangle" className="w-6 h-6 text-primary" />
             <ReactMarkdown components={MarkdownComponents}>{dialogData.header}</ReactMarkdown>
           </DialogTitle>
         </DialogHeader>
 
         <DialogDescription asChild>
-          <div className="text-muted-foreground">
+          <div className="text-muted-foreground leading-relaxed">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
                 ...MarkdownComponents,
-                img: ({ ...props }) => <img className="max-w-full max-h-full" {...props} />,
+                img: ({ ...props }) => (
+                  <img className="max-w-full max-h-full rounded-lg border border-border" {...props} />
+                ),
               }}
             >
               {dialogData.content}
@@ -63,13 +67,19 @@ const AlertDialog: React.FC = () => {
           </div>
         </DialogDescription>
 
-        <DialogFooter className="gap-2">
+        <DialogFooter className="gap-3 pt-4">
           {dialogData.cancel && (
-            <Button variant="outline" onClick={() => closeAlert('cancel')}>
+            <Button variant="outline" onClick={() => closeAlert('cancel')} className="flex items-center gap-2">
+              <LibIcon icon="xmark" className="w-4 h-4" />
               {dialogData.labels?.cancel || locale.ui.cancel}
             </Button>
           )}
-          <Button variant={dialogData.cancel ? 'default' : 'outline'} onClick={() => closeAlert('confirm')}>
+          <Button
+            variant={dialogData.cancel ? 'default' : 'outline'}
+            onClick={() => closeAlert('confirm')}
+            className="flex items-center gap-2"
+          >
+            <LibIcon icon="check" className="w-4 h-4" />
             {dialogData.labels?.confirm || locale.ui.confirm}
           </Button>
         </DialogFooter>

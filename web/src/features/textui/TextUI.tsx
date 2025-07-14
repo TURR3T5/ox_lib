@@ -47,20 +47,17 @@ const TextUI: React.FC = () => {
           exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.2 }}
         >
-          <div
-            className="bg-background/95 backdrop-blur-sm border border-border rounded-lg shadow-lg p-3 max-w-sm"
-            style={data.style}
-          >
-            <div className="flex items-start gap-3">
+          <div className="gaming-card rounded-lg p-4 max-w-sm gaming-skew" style={data.style}>
+            <div className={cn('flex gap-3', data.alignIcon === 'center' ? 'items-center' : 'items-start')}>
               {data.icon && (
                 <div
-                  className={cn('flex-shrink-0', data.alignIcon === 'top' ? 'mt-0' : 'mt-0.5')}
-                  style={{ color: data.iconColor }}
+                  className="flex-shrink-0 flex items-center justify-center"
+                  style={{ color: data.iconColor || 'hsl(var(--primary))' }}
                 >
-                  <LibIcon icon={data.icon} fixedWidth animation={data.iconAnimation} className="w-4 h-4" />
+                  <LibIcon icon={data.icon} fixedWidth animation={data.iconAnimation} className="w-5 h-5" />
                 </div>
               )}
-              <div className="text-sm leading-relaxed">
+              <div className="text-sm leading-relaxed text-muted-foreground">
                 <ReactMarkdown components={MarkdownComponents} remarkPlugins={[remarkGfm]}>
                   {data.text}
                 </ReactMarkdown>

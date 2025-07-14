@@ -6,7 +6,6 @@ import { isIconUrl } from '../../../../utils/isIconUrl';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import MarkdownComponents from '../../../../config/MarkdownComponents';
 import LibIcon from '../../../../components/LibIcon';
-import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
@@ -21,7 +20,8 @@ const clickContext = (id: string) => {
 
 const ContextButton: React.FC<{
   option: [string, Option];
-}> = ({ option }) => {
+  isLast?: boolean;
+}> = ({ option, isLast }) => {
   const button = option[1];
   const buttonKey = option[0];
 
@@ -40,18 +40,18 @@ const ContextButton: React.FC<{
   return (
     <HoverCard openDelay={200}>
       <HoverCardTrigger asChild>
-        <Button
-          variant="outline"
+        <div
           className={cn(
-            'w-full h-auto p-3 justify-start text-left',
-            button.readOnly && 'hover:bg-background active:transform-none cursor-default',
-            button.disabled && 'opacity-50'
+            'w-full p-4 cursor-pointer transition-all duration-300 border-b border-border/50',
+            'hover:bg-primary/10 hover:border-primary/50 hover:shadow-lg',
+            isLast && 'border-b-0',
+            button.readOnly && 'hover:bg-transparent cursor-default',
+            button.disabled && 'opacity-50 cursor-not-allowed'
           )}
           onClick={handleClick}
-          disabled={button.disabled}
         >
           <div className="flex items-center justify-between w-full min-w-0">
-            <div className="flex flex-col min-w-0 flex-1 gap-1">
+            <div className="flex flex-col min-w-0 flex-1 gap-2">
               {(button.title || Number.isNaN(+buttonKey)) && (
                 <div className="flex items-center gap-3">
                   {button?.icon && (
@@ -62,60 +62,66 @@ const ContextButton: React.FC<{
                         <LibIcon
                           icon={button.icon as IconProp}
                           fixedWidth
-                          className="w-4 h-4"
+                          className="w-5 h-5 text-primary"
                           style={{ color: button.iconColor }}
                           animation={button.iconAnimation}
                         />
                       )}
                     </div>
                   )}
-                  <span className="text-sm font-medium break-words">
+                  <span className="text-sm font-semibold text-white uppercase tracking-wide">
                     <ReactMarkdown components={MarkdownComponents}>{button.title || buttonKey}</ReactMarkdown>
                   </span>
                 </div>
               )}
 
               {button.description && (
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground leading-relaxed">
                   <ReactMarkdown components={MarkdownComponents}>{button.description}</ReactMarkdown>
                 </p>
               )}
 
-              {button.progress !== undefined && <Progress value={button.progress} className="h-2 mt-1" />}
+              {button.progress !== undefined && (
+                <div className="mt-2">
+                  <Progress value={button.progress} className="h-2" />
+                </div>
+              )}
             </div>
 
             {(button.menu || button.arrow) && button.arrow !== false && (
-              <div className="flex items-center justify-center w-6 h-6 ml-2 flex-shrink-0">
-                <LibIcon icon="chevron-right" className="w-3 h-3" fixedWidth />
+              <div className="flex items-center justify-center w-6 h-6 ml-3 flex-shrink-0">
+                <LibIcon icon="chevron-right" className="w-4 h-4 text-primary" fixedWidth />
               </div>
             )}
           </div>
-        </Button>
+        </div>
       </HoverCardTrigger>
 
       {hasMetadataToShow && (
-        <HoverCardContent className="w-64 p-3" side="right" align="start">
-          {button.image && <img src={button.image} alt="Preview" className="w-full rounded-md mb-2" />}
+        <HoverCardContent className="w-80 p-4 gaming-card gaming-skew" side="left" align="start">
+          {button.image && (
+            <img src={button.image} alt="Preview" className="w-full rounded-lg mb-3 border border-border" />
+          )}
 
           {Array.isArray(button.metadata) ? (
-            <div className="space-y-2">
+            <div className="space-y-3">
               {button.metadata.map((metadata, index) => (
                 <div key={`context-metadata-${index}`}>
-                  <p className="text-sm">
+                  <p className="text-sm text-muted-foreground">
                     {typeof metadata === 'string' ? metadata : `${metadata.label}: ${metadata?.value ?? ''}`}
                   </p>
 
                   {typeof metadata === 'object' && metadata.progress !== undefined && (
-                    <Progress value={metadata.progress} className="h-2 mt-1" />
+                    <Progress value={metadata.progress} className="h-2 mt-2" />
                   )}
                 </div>
               ))}
             </div>
           ) : button.metadata && typeof button.metadata === 'object' ? (
-            <div className="space-y-1">
+            <div className="space-y-2">
               {Object.entries(button.metadata).map(([key, value], index) => (
-                <p key={`context-metadata-${index}`} className="text-sm">
-                  {key}: {value}
+                <p key={`context-metadata-${index}`} className="text-sm text-muted-foreground">
+                  <span className="text-primary font-medium">{key}:</span> {value}
                 </p>
               ))}
             </div>

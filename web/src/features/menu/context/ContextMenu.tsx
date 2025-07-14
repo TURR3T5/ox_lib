@@ -6,7 +6,6 @@ import { fetchNui } from '../../../utils/fetchNui';
 import ReactMarkdown from 'react-markdown';
 import HeaderButton from './components/HeaderButton';
 import MarkdownComponents from '../../../config/MarkdownComponents';
-import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const openMenu = (id: string | undefined) => {
@@ -52,31 +51,39 @@ const ContextMenu: React.FC = () => {
     <AnimatePresence>
       {visible && (
         <motion.div
-          className="fixed top-[15%] right-[25%] w-80 h-[580px] z-50"
+          className="fixed right-8 top-1/2 -translate-y-1/2 w-96 max-h-[70vh] z-50 gaming-skew"
           initial={{ opacity: 0, x: 50, scale: 0.95 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
           exit={{ opacity: 0, x: 50, scale: 0.95 }}
           transition={{ duration: 0.2 }}
         >
-          <div className="flex items-center gap-2 mb-2">
-            {contextMenu.menu && (
-              <HeaderButton icon="chevron-left" iconSize={16} handleClick={() => openMenu(contextMenu.menu)} />
-            )}
+          <div className="gaming-card rounded-lg overflow-hidden shadow-2xl">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-border bg-gradient-to-r from-card to-secondary">
+              {contextMenu.menu && (
+                <HeaderButton icon="chevron-left" iconSize={16} handleClick={() => openMenu(contextMenu.menu)} />
+              )}
 
-            <div className="flex-1 bg-background border border-border rounded-md">
-              <div className="text-center p-2 text-foreground">
-                <ReactMarkdown components={MarkdownComponents}>{contextMenu.title}</ReactMarkdown>
+              <div className="flex-1 text-center mx-3">
+                <h2 className="text-white font-bold uppercase tracking-wider text-lg">
+                  <ReactMarkdown components={MarkdownComponents}>{contextMenu.title}</ReactMarkdown>
+                </h2>
               </div>
+
+              <HeaderButton icon="xmark" canClose={contextMenu.canClose} iconSize={18} handleClick={closeContext} />
             </div>
 
-            <HeaderButton icon="xmark" canClose={contextMenu.canClose} iconSize={18} handleClick={closeContext} />
-          </div>
-
-          <div className="h-[560px] overflow-y-auto">
-            <div className="space-y-1">
-              {Object.entries(contextMenu.options).map((option, index) => (
-                <ContextButton option={option} key={`context-item-${index}`} />
-              ))}
+            {/* Content */}
+            <div className="max-h-[calc(70vh-4rem)] overflow-y-auto">
+              <div className="space-y-0">
+                {Object.entries(contextMenu.options).map((option, index) => (
+                  <ContextButton
+                    option={option}
+                    key={`context-item-${index}`}
+                    isLast={index === Object.entries(contextMenu.options).length - 1}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </motion.div>

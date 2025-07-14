@@ -169,14 +169,13 @@ const ListMenu: React.FC = () => {
     <AnimatePresence>
       {visible && (
         <motion.div
-          className={cn('fixed z-50 w-96', getPositionClasses(menu.position))}
+          className={cn('fixed z-50 w-96', getPositionClasses(menu.position), 'gaming-skew')}
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.15 }}
         >
           <div className="relative">
-            {/* Tooltip */}
             {(isValuesObject(menu.items[selected].values)
               ? (menu.items[selected].values as any)[indexStates[selected]]?.description
               : menu.items[selected].description) && (
@@ -186,10 +185,12 @@ const ListMenu: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
               >
-                <div className="bg-popover border border-border rounded-md p-3 text-sm shadow-lg max-w-sm break-words">
-                  {isValuesObject(menu.items[selected].values)
-                    ? (menu.items[selected].values as any)[indexStates[selected]].description
-                    : menu.items[selected].description}
+                <div className="gaming-card rounded-lg p-3 text-sm shadow-lg max-w-sm break-words">
+                  <p className="text-muted-foreground">
+                    {isValuesObject(menu.items[selected].values)
+                      ? (menu.items[selected].values as any)[indexStates[selected]].description
+                      : menu.items[selected].description}
+                  </p>
                 </div>
               </motion.div>
             )}
@@ -198,14 +199,14 @@ const ListMenu: React.FC = () => {
 
             <div
               className={cn(
-                'bg-background border-x border-b border-border overflow-hidden',
+                'gaming-card border-t-0 rounded-t-none overflow-hidden',
                 'max-h-[415px]',
-                menu.items.length <= 6 || selected === menu.items.length - 1 ? 'rounded-b-md' : ''
+                menu.items.length <= 6 || selected === menu.items.length - 1 ? 'rounded-b-lg' : ''
               )}
               onKeyDown={moveMenu}
               tabIndex={0}
             >
-              <div className="overflow-y-auto p-2 space-y-2">
+              <div className="overflow-y-auto p-2 space-y-1">
                 {menu.items.map((item, index) => (
                   <React.Fragment key={`menu-item-${index}`}>
                     {item.label && (
@@ -229,11 +230,11 @@ const ListMenu: React.FC = () => {
 
             {menu.items.length > 6 && selected !== menu.items.length - 1 && (
               <motion.div
-                className="bg-background border-x border-b border-border rounded-b-md h-6 flex items-center justify-center"
+                className="gaming-card border-t-0 rounded-t-none rounded-b-lg h-6 flex items-center justify-center"
                 animate={{ y: [0, 2, 0] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
               >
-                <LibIcon icon="chevron-down" className="w-4 h-4 text-muted-foreground" />
+                <LibIcon icon="chevron-down" className="w-4 h-4 text-primary" />
               </motion.div>
             )}
           </div>
