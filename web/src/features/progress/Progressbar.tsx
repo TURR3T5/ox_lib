@@ -79,7 +79,8 @@ const Progressbar: React.FC = () => {
                   return (
                     <motion.div
                       key={segment}
-                      className="bg-secondary/50 w-[8px] h-[16px] -skew-x-5 relative overflow-hidden rounded-sm"
+                      className="bg-secondary/50 w-[8px] h-[16px] relative overflow-hidden rounded-sm"
+                      style={{ skewX: '-5deg' }}
                       initial={{ scaleY: 0 }}
                       animate={{ scaleY: 1 }}
                       transition={{ delay: segment * 0.02, duration: 0.2 }}

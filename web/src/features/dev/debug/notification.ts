@@ -11,11 +11,6 @@ export const debugCustomNotification = () => {
         type: 'success',
         id: 'pogchamp',
         duration: 20000,
-        style: {
-          '.description': {
-            color: 'red',
-          },
-        },
       },
     },
   ]);
