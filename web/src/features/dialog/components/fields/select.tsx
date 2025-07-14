@@ -45,16 +45,18 @@ const SelectField: React.FC<Props> = ({ row, index, control }) => {
           className="react-select-container"
           classNamePrefix="react-select"
           styles={{
-            control: (base) => ({
+            control: (base, state) => ({
               ...base,
               minHeight: '40px',
               borderColor: 'hsl(var(--border))',
-              backgroundColor: 'hsl(var(--background))',
+              backgroundColor: 'hsl(var(--muted))',
+              borderRadius: '8px',
+              boxShadow: 'none',
               '&:hover': {
-                borderColor: 'hsl(var(--border))',
+                borderColor: 'hsl(var(--primary) / 0.3)',
               },
               '&:focus-within': {
-                borderColor: 'hsl(var(--ring))',
+                borderColor: 'hsl(var(--primary))',
                 boxShadow: '0 0 0 2px hsl(var(--ring) / 0.2)',
               },
             }),
@@ -62,7 +64,8 @@ const SelectField: React.FC<Props> = ({ row, index, control }) => {
               ...base,
               backgroundColor: 'hsl(var(--popover))',
               border: '1px solid hsl(var(--border))',
-              borderRadius: '6px',
+              borderRadius: '8px',
+              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)',
             }),
             option: (base, state) => ({
               ...base,
@@ -72,6 +75,8 @@ const SelectField: React.FC<Props> = ({ row, index, control }) => {
                 ? 'hsl(var(--primary))'
                 : 'transparent',
               color: state.isSelected ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))',
+              borderRadius: '4px',
+              margin: '2px',
               '&:hover': {
                 backgroundColor: 'hsl(var(--accent))',
               },
@@ -79,19 +84,31 @@ const SelectField: React.FC<Props> = ({ row, index, control }) => {
             multiValue: (base) => ({
               ...base,
               backgroundColor: 'hsl(var(--secondary))',
-              color: 'hsl(var(--secondary-foreground))',
+              borderRadius: '6px',
+              padding: '2px 6px',
             }),
             multiValueLabel: (base) => ({
               ...base,
               color: 'hsl(var(--secondary-foreground))',
+              fontSize: '12px',
+              fontWeight: '500',
             }),
             multiValueRemove: (base) => ({
               ...base,
               color: 'hsl(var(--secondary-foreground))',
+              borderRadius: '4px',
               '&:hover': {
                 backgroundColor: 'hsl(var(--destructive))',
                 color: 'hsl(var(--destructive-foreground))',
               },
+            }),
+            placeholder: (base) => ({
+              ...base,
+              color: 'hsl(var(--muted-foreground))',
+            }),
+            singleValue: (base) => ({
+              ...base,
+              color: 'hsl(var(--foreground))',
             }),
           }}
           maxMenuHeight={200}
@@ -107,7 +124,7 @@ const SelectField: React.FC<Props> = ({ row, index, control }) => {
       {row.description && <p className="text-sm text-muted-foreground">{row.description}</p>}
 
       <Select value={controller.field.value} onValueChange={controller.field.onChange} disabled={row.disabled}>
-        <SelectTrigger className={cn(row.icon && 'pl-10')}>
+        <SelectTrigger className={cn(row.icon && 'pl-10', 'bg-muted')}>
           {row.icon && (
             <div className="absolute left-3 h-4 w-4 text-muted-foreground flex items-center justify-center">
               <LibIcon icon={row.icon} fixedWidth />

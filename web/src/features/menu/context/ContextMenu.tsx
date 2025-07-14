@@ -73,7 +73,7 @@ const ContextMenu: React.FC = () => {
             transition={{ duration: 0.2 }}
           >
             <div className="gaming-card rounded-lg overflow-hidden shadow-2xl">
-              <div className="flex items-center justify-between p-4 border-b border-border bg-gradient-to-r from-card to-secondary">
+              <div className="flex items-center justify-between p-4 border-b border-border bg-gradient-to-r from-card to-secondary -skew-x-1">
                 {contextMenu.menu && (
                   <HeaderButton icon="chevron-left" iconSize={16} handleClick={() => openMenu(contextMenu.menu)} />
                 )}

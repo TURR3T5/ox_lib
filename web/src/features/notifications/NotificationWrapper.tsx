@@ -136,8 +136,35 @@ const Notifications: React.FC = () => {
       case 'top':
         position = 'top-center';
         break;
+      case 'top-center':
+        position = 'top-center';
+        break;
+      case 'top-right':
+        position = 'top-right';
+        break;
+      case 'top-left':
+        position = 'top-left';
+        break;
       case 'bottom':
         position = 'bottom-center';
+        break;
+      case 'bottom-center':
+        position = 'bottom-center';
+        break;
+      case 'bottom-right':
+        position = 'bottom-right';
+        break;
+      case 'bottom-left':
+        position = 'bottom-left';
+        break;
+      case 'center-right':
+        position = 'top-right';
+        break;
+      case 'center-left':
+        position = 'top-left';
+        break;
+      default:
+        position = 'top-right';
         break;
     }
 

@@ -165,6 +165,15 @@ const ListMenu: React.FC = () => {
     listRefs.current[data.startItemIndex]?.focus();
   });
 
+  const getTooltipPosition = () => {
+    const position = menu.position || 'top-left';
+    if (position.includes('left')) {
+      return 'left-full ml-2';
+    } else {
+      return 'right-full mr-2';
+    }
+  };
+
   return (
     <AnimatePresence>
       {visible && (
@@ -189,13 +198,13 @@ const ListMenu: React.FC = () => {
                 ? (menu.items[selected].values as any)[indexStates[selected]]?.description
                 : menu.items[selected].description) && (
                 <motion.div
-                  className="absolute -right-2 top-0 transform translate-x-full z-10"
-                  initial={{ opacity: 0, x: -10 }}
+                  className={cn('absolute top-1/2 -translate-y-1/2 z-20 w-72', getTooltipPosition())}
+                  initial={{ opacity: 0, x: menu.position?.includes('left') ? -10 : 10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
+                  exit={{ opacity: 0, x: menu.position?.includes('left') ? -10 : 10 }}
                 >
-                  <div className="gaming-card rounded-lg p-3 text-sm shadow-lg max-w-sm break-words">
-                    <p className="text-muted-foreground">
+                  <div className="gaming-card rounded-lg p-3 text-sm shadow-xl border border-primary/20">
+                    <p className="text-muted-foreground leading-relaxed">
                       {isValuesObject(menu.items[selected].values)
                         ? (menu.items[selected].values as any)[indexStates[selected]].description
                         : menu.items[selected].description}

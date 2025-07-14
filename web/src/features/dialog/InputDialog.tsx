@@ -105,20 +105,20 @@ const InputDialog: React.FC = () => {
 
   return (
     <Dialog open={visible} onOpenChange={() => handleClose()}>
-      <DialogContent className="max-w-md">
-        <DialogHeader className="space-y-4">
+      <DialogContent className="max-w-md max-h-[85vh] overflow-y-auto">
+        <DialogHeader className="space-y-3 pb-2">
           <DialogTitle className="flex items-center gap-3">
             <LibIcon icon="keyboard" className="w-6 h-6 text-primary" />
             {fields.heading}
           </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={onSubmit} className="space-y-6">
-          <div className="space-y-5">
+        <form onSubmit={onSubmit} className="space-y-4">
+          <div className="space-y-3 max-h-[50vh] overflow-y-auto pr-2">
             {fieldForm.fields.map((item, index) => {
               const row = fields.rows[index];
               return (
-                <div key={item.id} className="gaming-card rounded-lg p-4">
+                <div key={item.id} className="gaming-card rounded-lg p-3">
                   {row.type === 'input' && (
                     <InputField
                       register={form.register(`test.${index}.value`, { required: row.required })}
@@ -155,7 +155,7 @@ const InputDialog: React.FC = () => {
             })}
           </div>
 
-          <div className="flex justify-end gap-3 pt-4">
+          <div className="flex justify-end gap-3 pt-3 border-t border-border">
             <Button
               type="button"
               variant="outline"

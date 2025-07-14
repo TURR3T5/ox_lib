@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import LibIcon from '../../components/LibIcon';
+import { cn } from '@/lib/utils';
 
 const AlertDialog: React.FC = () => {
   const { locale } = useLocales();
@@ -39,10 +40,31 @@ const AlertDialog: React.FC = () => {
     setOpened(false);
   });
 
+  const getSizeClass = (size?: string) => {
+    switch (size) {
+      case 'xs':
+        return 'max-w-xs';
+      case 'sm':
+        return 'max-w-sm';
+      case 'md':
+        return 'max-w-md';
+      case 'lg':
+        return 'max-w-lg';
+      case 'xl':
+        return 'max-w-xl';
+      default:
+        return 'max-w-md';
+    }
+  };
+
   return (
     <Dialog open={opened} onOpenChange={() => closeAlert('cancel')}>
       <DialogContent
-        className={`max-w-${dialogData.size || 'md'} ${dialogData.overflow ? 'max-h-[80vh] overflow-y-auto' : ''}`}
+        className={cn(
+          getSizeClass(dialogData.size),
+          'w-full',
+          dialogData.overflow ? 'max-h-[80vh] overflow-y-auto' : ''
+        )}
       >
         <DialogHeader className="space-y-4">
           <DialogTitle className="flex items-center gap-3">

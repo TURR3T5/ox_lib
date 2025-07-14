@@ -3,6 +3,7 @@ import { useNuiEvent } from '../../hooks/useNuiEvent';
 import { fetchNui } from '../../utils/fetchNui';
 import type { ProgressbarProps } from '../../typings';
 import { motion, AnimatePresence } from 'framer-motion';
+import LibIcon from '@/components/LibIcon';
 
 const Progressbar: React.FC = () => {
   const [visible, setVisible] = React.useState(false);
@@ -10,8 +11,12 @@ const Progressbar: React.FC = () => {
   const [duration, setDuration] = React.useState(0);
   const [progress, setProgress] = React.useState(0);
   const [startTime, setStartTime] = React.useState(0);
+  const [isCompleted, setIsCompleted] = React.useState(false);
 
-  useNuiEvent('progressCancel', () => setVisible(false));
+  useNuiEvent('progressCancel', () => {
+    setVisible(false);
+    setIsCompleted(false);
+  });
 
   useNuiEvent<ProgressbarProps>('progress', (data) => {
     setVisible(true);
@@ -19,6 +24,7 @@ const Progressbar: React.FC = () => {
     setDuration(data.duration);
     setProgress(0);
     setStartTime(Date.now());
+    setIsCompleted(false);
   });
 
   React.useEffect(() => {
@@ -29,14 +35,18 @@ const Progressbar: React.FC = () => {
       const newProgress = Math.min((elapsed / duration) * 100, 100);
       setProgress(newProgress);
 
-      if (newProgress >= 100) {
-        setVisible(false);
-        fetchNui('progressComplete');
+      if (newProgress >= 100 && !isCompleted) {
+        setIsCompleted(true);
+        setTimeout(() => {
+          setVisible(false);
+          setIsCompleted(false);
+          fetchNui('progressComplete');
+        }, 500);
       }
     }, 16);
 
     return () => clearInterval(interval);
-  }, [visible, duration, startTime]);
+  }, [visible, duration, startTime, isCompleted]);
 
   const segments = Array.from({ length: 20 }, (_, i) => i);
 
@@ -68,7 +78,14 @@ const Progressbar: React.FC = () => {
             <div className="gaming-card rounded-lg p-6 shadow-2xl">
               <div className="flex items-center justify-between mb-6">
                 <span className="text-sm font-bold text-white uppercase tracking-wider">{label}</span>
-                <span className="text-sm font-bold text-primary">{Math.round(progress)}%</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-primary">{Math.round(progress)}%</span>
+                  {isCompleted && (
+                    <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-green-400">
+                      <LibIcon icon="check-circle" className="w-4 h-4" />
+                    </motion.div>
+                  )}
+                </div>
               </div>
 
               <div className="flex gap-1 justify-center items-center mb-4">
