@@ -56,21 +56,18 @@ const ContextMenu: React.FC = () => {
             opacity: 0,
             x: 50,
             y: '-50%',
-            skewX: '-1deg',
             scale: 0.95,
           }}
           animate={{
             opacity: 1,
             x: 0,
             y: '-50%',
-            skewX: '-1deg',
             scale: 1,
           }}
           exit={{
             opacity: 0,
             x: 50,
             y: '-50%',
-            skewX: '-1deg',
             scale: 0.95,
           }}
           transition={{ duration: 0.2 }}

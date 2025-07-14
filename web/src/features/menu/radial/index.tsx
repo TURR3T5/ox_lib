@@ -37,7 +37,7 @@ const degToRad = (deg: number) => deg * (Math.PI / 180);
 
 const RadialMenu: React.FC = () => {
   const { locale } = useLocales();
-  const newDimension = 400 * 1.1025;
+  const newDimension = 400;
   const [visible, setVisible] = useState(false);
   const [menuItems, setMenuItems] = useState<RadialMenuItem[]>([]);
   const [menu, setMenu] = useState<{ items: RadialMenuItem[]; sub?: boolean; page: number }>({
@@ -122,21 +122,16 @@ const RadialMenu: React.FC = () => {
                 <stop offset="0%" stopColor="hsl(215, 7%, 11%)" />
                 <stop offset="100%" stopColor="hsl(215, 6%, 8%)" />
               </linearGradient>
-              <linearGradient id="hoverGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="hsl(212, 99%, 72%)" stopOpacity="0.2" />
-                <stop offset="100%" stopColor="hsl(212, 99%, 72%)" stopOpacity="0.1" />
-              </linearGradient>
             </defs>
 
             <g transform="translate(200, 200)">
-              <circle r={200} fill="url(#bgGradient)" stroke="hsl(220, 6%, 15%)" strokeWidth="3" />
+              <circle r={200} fill="url(#bgGradient)" stroke="hsl(220, 6%, 20%)" strokeWidth="2" />
             </g>
 
             {menuItems.map((item, index) => {
               const pieAngle = 360 / (menuItems.length < 3 ? 3 : menuItems.length);
               const angle = degToRad(pieAngle / 2 + 90);
-              const gap = 2;
-              const radius = 200 * 0.65 - gap;
+              const radius = 200 * 0.65;
               const sinAngle = Math.sin(angle);
               const cosAngle = Math.cos(angle);
               const iconYOffset = splitTextIntoLines(item.label, 15).length > 3 ? 3 : 0;
@@ -148,7 +143,7 @@ const RadialMenu: React.FC = () => {
               return (
                 <g
                   key={`radial-item-${index}`}
-                  transform={`rotate(-${index * pieAngle} 200 200) translate(${sinAngle * gap}, ${cosAngle * gap})`}
+                  transform={`rotate(-${index * pieAngle} 200 200)`}
                   className="cursor-pointer transition-all duration-300 group"
                   onClick={async () => {
                     const clickIndex = menu.page === 1 ? index : PAGE_ITEMS * (menu.page - 1) - (menu.page - 1) + index;
@@ -157,12 +152,11 @@ const RadialMenu: React.FC = () => {
                   }}
                 >
                   <path
-                    d={`M200.01,200.01 l${200 - gap},0 A200.01,200.01 0 0,0 ${
-                      200 + (200 - gap) * Math.cos(-degToRad(pieAngle))
-                    }, ${200 + (200 - gap) * Math.sin(-degToRad(pieAngle))} z`}
-                    fill="hsl(220, 6%, 15%)"
-                    stroke="hsl(220, 6%, 20%)"
-                    strokeWidth="1"
+                    d={`M200,200 l${200},0 A200,200 0 0,0 ${200 + 200 * Math.cos(-degToRad(pieAngle))}, ${
+                      200 + 200 * Math.sin(-degToRad(pieAngle))
+                    } z`}
+                    fill="hsl(220, 6%, 13%)"
+                    stroke="none"
                     className="group-hover:fill-primary/20 transition-all duration-300"
                   />
 
@@ -195,7 +189,6 @@ const RadialMenu: React.FC = () => {
                       fontSize={calculateFontSize(item.label)}
                       fontWeight="500"
                       className="pointer-events-none group-hover:fill-muted-foreground transition-all duration-300 uppercase tracking-wide"
-                      lengthAdjust="spacingAndGlyphs"
                     >
                       {splitTextIntoLines(item.label, 15).map((line, index) => (
                         <tspan x={iconX} dy={index === 0 ? 0 : '1.2em'} key={index}>
@@ -211,10 +204,10 @@ const RadialMenu: React.FC = () => {
             <g transform="translate(200, 200)" onClick={handleCenterClick}>
               <circle
                 r={32}
-                fill="hsl(212, 99%, 72%)"
+                fill="hsl(0, 0%, 100%)"
                 stroke="hsl(220, 6%, 15%)"
-                strokeWidth="4"
-                className="cursor-pointer transition-all duration-300 hover:fill-primary/90 drop-shadow-lg"
+                strokeWidth="3"
+                className="cursor-pointer transition-all duration-300 hover:fill-gray-200 drop-shadow-lg"
               />
             </g>
           </svg>
@@ -223,7 +216,7 @@ const RadialMenu: React.FC = () => {
             <LibIcon
               icon={!menu.sub && menu.page < 2 ? 'xmark' : 'arrow-rotate-left'}
               fixedWidth
-              className="w-8 h-8 text-muted-foreground font-bold"
+              className="w-8 h-8 text-gray-800 font-bold"
             />
           </div>
         </motion.div>

@@ -173,21 +173,18 @@ const ListMenu: React.FC = () => {
           initial={{
             opacity: 0,
             scale: 0.95,
-            skewX: '-1deg',
           }}
           animate={{
             opacity: 1,
             scale: 1,
-            skewX: '-1deg',
           }}
           exit={{
             opacity: 0,
             scale: 0.95,
-            skewX: '-1deg',
           }}
           transition={{ duration: 0.15 }}
         >
-          <div className="relative">
+          <div className="relative -skew-x-1">
             {(isValuesObject(menu.items[selected].values)
               ? (menu.items[selected].values as any)[indexStates[selected]]?.description
               : menu.items[selected].description) && (
@@ -197,10 +194,7 @@ const ListMenu: React.FC = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
               >
-                <div
-                  className="gaming-card rounded-lg p-3 text-sm shadow-lg max-w-sm break-words"
-                  style={{ transform: 'skewX(1deg)' }}
-                >
+                <div className="gaming-card rounded-lg p-3 text-sm shadow-lg max-w-sm break-words">
                   <p className="text-muted-foreground">
                     {isValuesObject(menu.items[selected].values)
                       ? (menu.items[selected].values as any)[indexStates[selected]].description
