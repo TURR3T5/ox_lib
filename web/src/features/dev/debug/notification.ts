@@ -7,10 +7,11 @@ export const debugCustomNotification = () => {
       action: 'notify',
       data: {
         title: 'Success',
-        description: 'Notification description',
+        description: 'Notification with duration indicator',
         type: 'success',
-        id: 'pogchamp',
-        duration: 20000,
+        id: 'success-with-duration',
+        duration: 8000,
+        showDuration: true,
       },
     },
   ]);
@@ -19,8 +20,10 @@ export const debugCustomNotification = () => {
       action: 'notify',
       data: {
         title: 'Error',
-        description: 'Notification description',
+        description: 'Notification without duration indicator',
         type: 'error',
+        duration: 5000,
+        showDuration: false,
       },
     },
   ]);
@@ -29,10 +32,11 @@ export const debugCustomNotification = () => {
       action: 'notify',
       data: {
         title: 'Custom icon success',
-        description: 'Notification description',
+        description: 'Short notification with countdown',
         type: 'success',
         icon: 'microchip',
-        showDuration: false,
+        duration: 3000,
+        showDuration: true,
       },
     },
   ]);
