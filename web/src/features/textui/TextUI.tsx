@@ -80,7 +80,7 @@ const TextUI: React.FC = () => {
   return (
     <AnimatePresence>
       {visible && (
-        <div className={cn('fixed z-50 -skew-x-1', getPositionClasses(data.position || 'right-center'))}>
+        <div className={cn('fixed z-50', getPositionClasses(data.position || 'right-center'))}>
           <motion.div {...getMotionProps(data.position || 'right-center')} transition={{ duration: 0.2 }}>
             <div className="gaming-card rounded-lg p-4 max-w-sm" style={data.style}>
               <div className="flex gap-3 items-center">

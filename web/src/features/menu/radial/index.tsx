@@ -101,7 +101,7 @@ const RadialMenu: React.FC = () => {
   return (
     <AnimatePresence>
       {visible && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 -skew-x-1">
+        <div className="fixed inset-0 flex items-center justify-center z-50">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}

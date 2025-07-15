@@ -177,7 +177,7 @@ const ListMenu: React.FC = () => {
   return (
     <AnimatePresence>
       {visible && (
-        <div className={cn('fixed z-50 w-96 -skew-x-1', getPositionClasses(menu.position))}>
+        <div className={cn('fixed z-50 w-96', getPositionClasses(menu.position))}>
           <motion.div
             initial={{
               opacity: 0,

@@ -74,7 +74,7 @@ const NotificationContent: React.FC<{
   return (
     <div
       className={cn(
-        'gaming-card rounded-lg p-4 w-80 border-l-4 relative overflow-hidden -skew-x-1',
+        'gaming-card rounded-lg p-4 w-80 border-l-4 relative overflow-hidden',
         borderColor,
         data.style as any
       )}

@@ -53,7 +53,7 @@ const Progressbar: React.FC = () => {
   return (
     <AnimatePresence>
       {visible && (
-        <div className="fixed left-1/2 bottom-20 w-[400px] z-50 -skew-x-1">
+        <div className="fixed left-1/2 bottom-20 w-[400px] z-50">
           <motion.div
             initial={{
               opacity: 0,
@@ -97,7 +97,6 @@ const Progressbar: React.FC = () => {
                     <motion.div
                       key={segment}
                       className="bg-secondary/50 w-[8px] h-[16px] relative overflow-hidden rounded-sm"
-                      style={{ skewX: '-5deg' }}
                       initial={{ scaleY: 0 }}
                       animate={{ scaleY: 1 }}
                       transition={{ delay: segment * 0.02, duration: 0.2 }}
